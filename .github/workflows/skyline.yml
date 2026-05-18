@@ -1,0 +1,30 @@
+name: Rebuild Skyline
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"   # weekly, Monday 04:17 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate skyline.svg from live contribution data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+        run: python3 scripts/gen_skyline.py
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "build: refresh skyline"
+          branch: main
+          file_pattern: assets/skyline.svg

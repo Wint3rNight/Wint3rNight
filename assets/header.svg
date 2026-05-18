@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 72" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="terminal tagline">
+  <defs>
+    <linearGradient id="under" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#8658E3" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#8658E3" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#8658E3" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="c0"><rect x="78" y="18" width="0" height="42"><animate attributeName="width" values="0.00;249.60;249.60;0.00;0.00" keyTimes="0;0.085714;0.249929;0.25;1" dur="14.0s" repeatCount="indefinite"/></rect></clipPath>
+    <clipPath id="c1"><rect x="78" y="18" width="0" height="42"><animate attributeName="width" values="0.00;0.00;296.40;296.40;0.00;0.00" keyTimes="0;0.25;0.335714;0.499929;0.5;1" dur="14.0s" repeatCount="indefinite"/></rect></clipPath>
+    <clipPath id="c2"><rect x="78" y="18" width="0" height="42"><animate attributeName="width" values="0.00;0.00;218.40;218.40;0.00;0.00" keyTimes="0;0.5;0.585714;0.749929;0.75;1" dur="14.0s" repeatCount="indefinite"/></rect></clipPath>
+    <clipPath id="c3"><rect x="78" y="18" width="0" height="42"><animate attributeName="width" values="0.00;0.00;265.20;265.20;265.20" keyTimes="0;0.75;0.835714;0.999929;1" dur="14.0s" repeatCount="indefinite"/></rect></clipPath>
+  </defs>
+
+  <rect x="24" y="66" width="732" height="1.2" fill="url(#under)"/>
+
+  <text x="36" y="48" font-size="26" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" font-weight="700">&gt;</text>
+
+  <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">
+  <text x="78" y="48" font-size="26" fill="#DADADA" clip-path="url(#c0)">I code sometimes</text>
+  <text x="78" y="48" font-size="26" fill="#DADADA" clip-path="url(#c1)">Graphics programmer</text>
+  <text x="78" y="48" font-size="26" fill="#DADADA" clip-path="url(#c2)">GPU programmer</text>
+  <text x="78" y="48" font-size="26" fill="#DADADA" clip-path="url(#c3)">Engine programmer</text>
+  </g>
+
+  <rect width="13" height="28" y="26" fill="#8658E3" rx="1.5">
+    <animate attributeName="x"
+      values="78;327.60;327.60;78;78;374.40;374.40;78;78;296.40;296.40;78;78;343.20;343.20;374.40"
+      keyTimes="0;0.085714;0.249929;0.25;0.25;0.335714;0.499929;0.5;0.5;0.585714;0.749929;0.75;0.75;0.835714;0.999929;1"
+      dur="14.0s" repeatCount="indefinite"/>
+    <animate attributeName="opacity"
+      values="1;1;0;0;1"
+      keyTimes="0;0.45;0.5;0.95;1"
+      dur="0.9s" repeatCount="indefinite"/>
+  </rect>
+</svg>
