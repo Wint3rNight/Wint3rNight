@@ -24,7 +24,7 @@ USERNAME = os.environ.get("USERNAME") or os.environ.get("GITHUB_REPOSITORY_OWNER
 TOKEN = os.environ.get("GITHUB_TOKEN")
 FEATURED_REPOS = ["Heliora", "Zenith", "Tinyforge", "BehaveYourself"]
 
-# GitHub's language colors for a few we care about; falls back to primary palette.
+# GitHub's language colors. Falls back to a palette-derived colour for unknowns.
 LANG_COLORS = {
     "C": "#555555",
     "C++": "#f34b7d",
@@ -38,11 +38,20 @@ LANG_COLORS = {
     "GLSL": "#5686a5",
     "HLSL": "#aace60",
     "CMake": "#DA3434",
-    "Cuda": "#3A4E3A",
+    "Cuda": "#76b900",
+    "CUDA": "#76b900",
+    "ShaderLab": "#6f42c1",
     "Java": "#b07219",
     "Rust": "#dea584",
     "Go": "#00ADD8",
+    "Wolfram Language": "#dd1100",
+    "Makefile": "#427819",
+    "Dockerfile": "#384d54",
+    "Lua": "#000080",
+    "Zig": "#ec915c",
 }
+
+TOP_LANGS_COUNT = 12  # how many languages to show in the bar + legend
 
 
 # --- HTTP -------------------------------------------------------------------
@@ -204,17 +213,29 @@ def write_featured(palette: dict[str, str]) -> list[str]:
 # --- stats card -------------------------------------------------------------
 
 def aggregate_stats(user: dict, repos: list[dict]) -> dict:
+    """Aggregate language stats by summing raw bytes across all owned repos.
+
+    GitHub exposes bytes-per-language via /repos/{owner}/{repo}/languages.
+    Summing those gives a far more accurate picture than counting how many
+    repos list a language as their primary language.
+    """
     owned = [r for r in repos if not r.get("fork")]
 
-    lang_count: dict[str, int] = {}
+    lang_bytes: dict[str, int] = {}
     for r in owned:
-        lng = r.get("language")
-        if not lng:
+        langs = safe_gh(f"/repos/{USERNAME}/{r['name']}/languages", {})
+        if not isinstance(langs, dict):
             continue
-        lang_count[lng] = lang_count.get(lng, 0) + 1
-    top_langs = sorted(lang_count.items(), key=lambda kv: kv[1], reverse=True)[:5]
-    total_lang = sum(v for _, v in top_langs) or 1
-    top_langs_pct = [(name, v, v * 100.0 / total_lang) for name, v in top_langs]
+        for lang, byte_count in langs.items():
+            lang_bytes[lang] = lang_bytes.get(lang, 0) + byte_count
+
+    all_lang_count = len(lang_bytes)  # total distinct languages (for the counter)
+
+    # Top N by bytes, percentages relative to the top-N subtotal
+    sorted_langs = sorted(lang_bytes.items(), key=lambda kv: kv[1], reverse=True)
+    top_langs = sorted_langs[:TOP_LANGS_COUNT]
+    total_bytes = sum(v for _, v in top_langs) or 1
+    top_langs_pct = [(name, b, b * 100.0 / total_bytes) for name, b in top_langs]
 
     created_raw = user.get("created_at")
     years_here: float | None = None
@@ -229,7 +250,7 @@ def aggregate_stats(user: dict, repos: list[dict]) -> dict:
 
     return {
         "public_repos": user.get("public_repos", 0),
-        "languages_used": len(lang_count),
+        "languages_used": all_lang_count,
         "contributions_year": contributions,
         "years_here": years_here,
         "top_langs": top_langs_pct,
@@ -237,7 +258,18 @@ def aggregate_stats(user: dict, repos: list[dict]) -> dict:
 
 
 def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
-    w, h = 1040, 200
+    """Render the stats SVG.
+
+    Card height grows by 24 px for every extra legend row beyond the first,
+    so 12 languages sit cleanly in two rows of 6.
+    """
+    top_langs = stats["top_langs"]
+    n = len(top_langs)
+    per_row = 6
+    legend_rows = max(1, -(-n // per_row))  # ceiling division
+    w = 1040
+    h = 200 + (legend_rows - 1) * 24
+
     primary = palette["primary"]
     light = palette["light"]
     p_rgb = hex_to_rgb(primary)
@@ -272,7 +304,7 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
                 f'<line x1="{sep_x}" y1="{metric_y - 30}" x2="{sep_x}" y2="{metric_y + 28}" stroke="{stroke}" stroke-width="1"/>'
             )
 
-    # language bar
+    # ── language bar ──────────────────────────────────────────────
     bar_y = 150
     bar_x = 40
     bar_w = w - 80
@@ -280,22 +312,27 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
     bar_segments: list[str] = []
     legend_parts: list[str] = []
     cursor = 0.0
-    for i, (name, _count, pct) in enumerate(stats["top_langs"]):
+    col_w = bar_w / per_row  # width each legend column occupies
+
+    for i, (name, _bytes, pct) in enumerate(top_langs):
         seg_w = bar_w * pct / 100.0
-        color = LANG_COLORS.get(name, mix(d_rgb, p_rgb, 0.5 + i * 0.08))
+        color = LANG_COLORS.get(name, mix(d_rgb, p_rgb, 0.5 + i * 0.06))
         bar_segments.append(
             f'<rect x="{bar_x + cursor:.2f}" y="{bar_y}" width="{seg_w:.2f}" height="{bar_h}" fill="{color}"/>'
         )
-        legend_x = bar_x + i * (bar_w / max(len(stats["top_langs"]), 1))
+        row = i // per_row
+        col = i % per_row
+        lx = bar_x + col * col_w
+        ly = bar_y + 32 + row * 24
         legend_parts.append(
-            f'<g transform="translate({legend_x:.0f} {bar_y + 32})" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">'
+            f'<g transform="translate({lx:.0f} {ly:.0f})" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">'
             f'<circle cx="6" cy="-4" r="5" fill="{color}"/>'
             f'<text x="18" y="0" font-size="11" fill="{light}" opacity="0.9">{esc(name)} <tspan fill="{muted}">{pct:.0f}%</tspan></text>'
             f'</g>'
         )
         cursor += seg_w
 
-    if not stats["top_langs"]:
+    if not top_langs:
         bar_segments.append(
             f'<rect x="{bar_x}" y="{bar_y}" width="{bar_w}" height="{bar_h}" fill="{stroke}"/>'
         )
@@ -305,7 +342,7 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
   {''.join(metric_parts)}
   <g>
     <clipPath id="barClip"><rect x="{bar_x}" y="{bar_y}" width="{bar_w}" height="{bar_h}" rx="4"/></clipPath>
-    <g clip-path="url(#barClip)">{''.join(bar_segments)}</g>
+    <g clip-path="url(#barClip)">{' '.join(bar_segments)}</g>
     <rect x="{bar_x}" y="{bar_y}" width="{bar_w}" height="{bar_h}" rx="4" fill="none" stroke="{stroke}" stroke-width="0.6"/>
   </g>
   {''.join(legend_parts)}

@@ -59,4 +59,5 @@ Currently: learning more of the GPU stack from the bottom up.
   <a href="mailto:pratap2003singh@gmail.com"><img src="https://img.shields.io/badge/email-pratap2003singh%40gmail.com-8658E3?style=for-the-badge&logo=gmail&logoColor=white" /></a>
   <a href="https://www.linkedin.com/in/pratap-singh-b6302426b/"><img src="https://img.shields.io/badge/linkedin-pratap--singh-8658E3?style=for-the-badge&logo=linkedin&logoColor=white" /></a>
   <a href="https://www.instagram.com/amidreaminnnn/"><img src="https://img.shields.io/badge/instagram-@amidreaminnnn-8658E3?style=for-the-badge&logo=instagram&logoColor=white" /></a>
+  <a href="https://leetcode.com/u/winter007/"><img src="https://img.shields.io/badge/leetcode-winter007-8658E3?style=for-the-badge&logo=leetcode&logoColor=white" /></a>
 </p>
