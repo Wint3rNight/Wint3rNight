@@ -11,10 +11,8 @@ deterministic mock data when run locally without one so the SVG always
 exists.
 """
 
-import hashlib
 import json
 import os
-import random
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -100,19 +98,13 @@ def fetch_contributions(username: str) -> list[int] | None:
     return counts[-DAYS:]
 
 
-def mock_contributions(username: str) -> list[int]:
-    seed = int(hashlib.sha256(username.encode()).hexdigest()[:12], 16)
-    rng = random.Random(seed)
-    counts: list[int] = []
-    start = date.today() - timedelta(days=DAYS - 1)
-    for i in range(DAYS):
-        d = start + timedelta(days=i)
-        weekend = d.weekday() >= 5
-        base = rng.gauss(2.5, 1.8) if weekend else rng.gauss(7.0, 3.5)
-        if rng.random() < 0.05:
-            base += rng.uniform(8, 16)
-        counts.append(max(0, int(base)))
-    return counts
+def zero_contributions() -> list[int]:
+    """Return a flat zero array used when no token is available locally.
+
+    This produces a clean empty baseline chart rather than seeded fake data
+    that would show misleading numbers like '2181 contributions'.
+    """
+    return [0] * DAYS
 
 
 def smooth(counts: list[float], window: int = 3) -> list[float]:
@@ -186,6 +178,43 @@ def build_svg(counts: list[int], palette: dict[str, str]) -> str:
     dash_len = int(approx_len * 1.1) + 32
 
     total = sum(counts)
+    has_data = total > 0
+    label_text = f"{total} contributions · last {DAYS} days" if has_data else "no data · run in CI with GITHUB_TOKEN"
+
+    start_date = date.today() - timedelta(days=DAYS - 1)
+
+    # ── per-day hit rects with <title> tooltips ───────────────────────────────
+    # Each rect covers the chart column for that day. Hovering shows
+    # "YYYY-MM-DD · N contributions" as a native browser tooltip.
+    # GitHub sanitises JS but leaves <title> intact inside SVG <img> tags
+    # when the SVG is opened directly; in README <img> embeds the title is
+    # shown by most browsers on hover.
+    seg_w = (WIDTH - 2 * PAD_X) / max(n - 1, 1)
+    hit_rects: list[str] = []
+    for i, raw in enumerate(counts):
+        d = start_date + timedelta(days=i)
+        tip = f"{d.isoformat()} · {raw} contribution{'s' if raw != 1 else ''}"
+        hx = PAD_X + i * seg_w - seg_w / 2
+        hit_rects.append(
+            f'<rect x="{hx:.1f}" y="{PAD_TOP}" width="{seg_w:.1f}" '
+            f'height="{HEIGHT - PAD_TOP - PAD_BOTTOM}" fill="transparent" cursor="crosshair">'
+            f'<title>{tip}</title></rect>'
+        )
+    hit_layer = "\n  ".join(hit_rects)
+
+    # ── animated cursor sweep ─────────────────────────────────────────────────
+    # A vertical line that sweeps from left to right over 3 s after the draw-in
+    # animation finishes. Gives the graph a sense of motion / "reading" the data.
+    cursor_line = (
+        f'<line x1="{PAD_X:.1f}" y1="{PAD_TOP}" x2="{PAD_X:.1f}" y2="{HEIGHT - PAD_BOTTOM}" '
+        f'stroke="{primary}" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.6">'
+        f'<animate attributeName="x1" from="{PAD_X:.1f}" to="{WIDTH - PAD_X:.1f}" '
+        f'dur="3s" begin="2.6s" fill="freeze"/>'
+        f'<animate attributeName="x2" from="{PAD_X:.1f}" to="{WIDTH - PAD_X:.1f}" '
+        f'dur="3s" begin="2.6s" fill="freeze"/>'
+        f'<animate attributeName="opacity" from="0.6" to="0" dur="0.6s" begin="5.5s" fill="freeze"/>'
+        f'</line>'
+    )
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="contribution flow for {USERNAME}">
   <defs>
@@ -216,23 +245,31 @@ def build_svg(counts: list[int], palette: dict[str, str]) -> str:
     <animate attributeName="r" values="0;4;3" keyTimes="0;0.6;1" dur="0.6s" begin="2.4s" fill="freeze"/>
   </circle>
 
+  {cursor_line}
+
+  <!-- per-day hover tooltips (browser-native <title>) -->
+  {hit_layer}
+
   <text x="{WIDTH - PAD_X}" y="{HEIGHT - 6}" text-anchor="end" font-size="11"
         font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{light}" opacity="0">
-    {total} contributions · last {DAYS} days
+    {label_text}
     <animate attributeName="opacity" from="0" to="0.55" dur="0.8s" begin="2.6s" fill="freeze"/>
   </text>
 </svg>
 '''
 
 
+
 def main() -> int:
     palette = load_palette()
     counts = fetch_contributions(USERNAME)
     if counts is None:
-        counts = mock_contributions(USERNAME)
+        print("[activity] no GITHUB_TOKEN — using zero baseline (run in CI for real data)", file=sys.stderr)
+        counts = zero_contributions()
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(build_svg(counts, palette))
-    print(f"[activity] wrote {OUT_PATH} (days={len(counts)}, total={sum(counts)}, max={max(counts)})")
+    total = sum(counts)
+    print(f"[activity] wrote {OUT_PATH} (days={len(counts)}, total={total}, max={max(counts)})")
     return 0
 
 

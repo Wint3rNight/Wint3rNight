@@ -1,63 +1,115 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 220" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="render pipeline / stack">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 180" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="tech stack">
   <defs>
-    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8658E3"/></marker>
-    <linearGradient id="rail" x1="0" x2="1" y1="0" y2="0"><stop offset="0%" stop-color="#8658E3" stop-opacity="0"/><stop offset="15%" stop-color="#8658E3" stop-opacity="0.7"/><stop offset="85%" stop-color="#8658E3" stop-opacity="0.7"/><stop offset="100%" stop-color="#8658E3" stop-opacity="0"/></linearGradient>
+    <linearGradient id="cardGrad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2A2435"/>
+      <stop offset="100%" stop-color="#1C1826"/>
+    </linearGradient>
   </defs>
-  <rect x="20" y="56.4" width="1060" height="1.2" fill="url(#rail)"/>
-  <line x1="196.0" y1="57.0" x2="222.8" y2="57.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="366.8" y1="57.0" x2="393.6" y2="57.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="537.6" y1="57.0" x2="564.4" y2="57.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="708.4" y1="57.0" x2="735.2" y2="57.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="879.2" y1="57.0" x2="906.0" y2="57.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <g>
-    <rect x="56.0" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="68.0" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="123.0" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">application</text>
-    <text x="123.0" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">C++  ·  C#</text>
+
+  <!--
+    Row 1: C++  Vulkan  CUDA  GLSL/HLSL  CMake  Linux
+    Row 2: Rust  Python  OpenGL  SPIR-V   RenderDoc  Git
+    Each card: 158 wide, 62 tall, 14px gap, 20px left margin
+    (158+14)*6 + 20*2 = 1024 + 40 = 1064  → fits in 1100
+  -->
+
+  <!-- ── row 1 ── -->
+
+  <!-- C++ -->
+  <g transform="translate(20 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#f34b7d"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">C++</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">systems · engine</text>
   </g>
-  <g>
-    <rect x="226.8" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="238.8" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="293.8" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">graphics api</text>
-    <text x="293.8" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">OpenGL  ·  Vulkan</text>
+
+  <!-- Vulkan -->
+  <g transform="translate(192 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#AC162C"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Vulkan</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">graphics api</text>
   </g>
-  <g>
-    <rect x="397.6" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="409.6" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="464.6" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">vertex stage</text>
-    <text x="464.6" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">GLSL  ·  HLSL</text>
+
+  <!-- CUDA -->
+  <g transform="translate(364 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#76b900"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">CUDA</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">gpu compute</text>
   </g>
-  <g>
-    <rect x="568.4" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="580.4" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="635.4" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">IR</text>
-    <text x="635.4" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">SPIR-V</text>
+
+  <!-- GLSL / HLSL -->
+  <g transform="translate(536 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#5686a5"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">GLSL · HLSL</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">shaders</text>
   </g>
-  <g>
-    <rect x="739.2" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="751.2" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="806.2" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">fragment stage</text>
-    <text x="806.2" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">GLSL  ·  HLSL</text>
+
+  <!-- CMake -->
+  <g transform="translate(708 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#DA3434"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">CMake</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">build system</text>
   </g>
-  <g>
-    <rect x="910.0" y="22" width="134" height="70" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="922.0" cy="34.0" r="3.2" fill="#8658E3"/>
-    <text x="977.0" y="50" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">framebuffer</text>
-    <text x="977.0" y="72" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">→  display</text>
+
+  <!-- Linux -->
+  <g transform="translate(880 16)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#FCC624"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Linux</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">primary env</text>
   </g>
-  <line x1="123.0" y1="92" x2="123.0" y2="150" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="63.0" y="150" width="120" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="123.0" y="178" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CMake</text>
+
+  <!-- ── row 2 ── -->
+
+  <!-- OpenGL -->
+  <g transform="translate(20 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#5586A4"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">OpenGL</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">graphics api</text>
   </g>
-  <line x1="464.6" y1="92" x2="464.6" y2="150" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="404.6" y="150" width="120" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="464.6" y="178" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CUDA</text>
+
+  <!-- SPIR-V -->
+  <g transform="translate(192 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#8658E3"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">SPIR-V</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">shader ir</text>
   </g>
-  <line x1="806.2" y1="92" x2="806.2" y2="150" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="746.2" y="150" width="120" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="806.2" y="178" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">RenderDoc</text>
+
+  <!-- Rust -->
+  <g transform="translate(364 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#dea584"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Rust</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">systems</text>
+  </g>
+
+  <!-- Python -->
+  <g transform="translate(536 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#3572A5"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Python</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">scripting · tools</text>
+  </g>
+
+  <!-- RenderDoc -->
+  <g transform="translate(708 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#D91E18"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">RenderDoc</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">gpu debugger</text>
+  </g>
+
+  <!-- Git -->
+  <g transform="translate(880 102)">
+    <rect width="158" height="62" rx="7" fill="url(#cardGrad)" stroke="#4A3574" stroke-width="1"/>
+    <circle cx="16" cy="16" r="4" fill="#F05032"/>
+    <text x="79" y="30" font-size="14" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Git</text>
+    <text x="79" y="50" font-size="11" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">version control</text>
   </g>
 </svg>

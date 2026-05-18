@@ -94,15 +94,55 @@ def gh_graphql(query: str, variables: dict) -> dict | None:
 
 
 def fetch_contributions_total(username: str) -> int | None:
-    """Total contributions across the trailing 12 months. Requires a token."""
+    """Total contributions in the trailing 12 months.
+
+    Strategy:
+    1. GraphQL (fast, exact) — only works in CI where GITHUB_TOKEN is set.
+    2. REST contributions calendar scrape — public, no token needed.
+       GitHub exposes a contributions calendar JSON-ish endpoint at
+       /users/{user}/contributions which returns an SVG; we avoid that.
+       Instead we hit the user's public events feed across the year.
+       That's rate-limited to 300 public events, so it under-counts heavy
+       contributors but gives a reasonable number without auth.
+    """
+    # --- try GraphQL first (CI path) ---
     payload = gh_graphql(
         """query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions}}}}""",
         {"login": username},
     )
-    try:
-        return int(payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
-    except (KeyError, TypeError, ValueError):
-        return None
+    if payload:
+        try:
+            return int(payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
+        except (KeyError, TypeError, ValueError):
+            pass
+
+    # --- REST fallback: public events (no auth needed) ---
+    # Cap at 10 pages × 100 events = 1000 events max
+    total = 0
+    from datetime import datetime, timezone, timedelta
+    cutoff = datetime.now(timezone.utc) - timedelta(days=365)
+    for page in range(1, 11):
+        events = safe_gh(f"/users/{username}/events/public?per_page=100&page={page}", [])
+        if not isinstance(events, list) or not events:
+            break
+        page_has_old = False
+        for ev in events:
+            created_raw = ev.get("created_at", "")
+            try:
+                created = datetime.fromisoformat(created_raw.replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                continue
+            if created < cutoff:
+                page_has_old = True
+                break
+            # Count pushes by commits, everything else as 1
+            if ev.get("type") == "PushEvent":
+                total += len((ev.get("payload") or {}).get("commits") or [])
+            else:
+                total += 1
+        if page_has_old:
+            break
+    return total if total else None
 
 
 # --- helpers ----------------------------------------------------------------
