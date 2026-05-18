@@ -29,7 +29,7 @@ jobs:
           USERNAME: ${{ github.repository_owner }}
         run: python3 scripts/gen_activity.py
 
-      - uses: stefanzweifel/git-auto-commit-action@v6
+      - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "build: refresh cards + activity"
           branch: main
