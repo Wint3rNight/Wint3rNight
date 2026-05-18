@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 360" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="render pipeline / stack">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 320" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="render pipeline / stack">
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8658E3"/></marker>
     <linearGradient id="rail" x1="0" x2="1" y1="0" y2="0"><stop offset="0%" stop-color="#8658E3" stop-opacity="0"/><stop offset="15%" stop-color="#8658E3" stop-opacity="0.7"/><stop offset="85%" stop-color="#8658E3" stop-opacity="0.7"/><stop offset="100%" stop-color="#8658E3" stop-opacity="0"/></linearGradient>
@@ -47,26 +47,17 @@
   </g>
   <line x1="123.0" y1="148" x2="123.0" y2="240" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
   <g>
-    <rect x="63.0" y="240" width="120" height="58" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="123.0" y="264" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CMake</text>
-    <text x="123.0" y="284" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#838383" text-anchor="middle">// build</text>
+    <rect x="63.0" y="240" width="120" height="42" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
+    <text x="123.0" y="266" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CMake</text>
   </g>
   <line x1="464.6" y1="148" x2="464.6" y2="240" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
   <g>
-    <rect x="404.6" y="240" width="120" height="58" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="464.6" y="264" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CUDA</text>
-    <text x="464.6" y="284" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#838383" text-anchor="middle">// compute</text>
+    <rect x="404.6" y="240" width="120" height="42" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
+    <text x="464.6" y="266" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CUDA</text>
   </g>
   <line x1="806.2" y1="148" x2="806.2" y2="240" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
   <g>
-    <rect x="746.2" y="240" width="120" height="58" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="806.2" y="264" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">RenderDoc</text>
-    <text x="806.2" y="284" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#838383" text-anchor="middle">// debug</text>
-  </g>
-  <text x="56" y="36" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#838383">// the stack, in the order pixels move through it</text>
-  <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="11" fill="#838383">
-    <text x="56" y="336">— pipeline flow</text>
-    <text x="216" y="336" fill="#838383">- - sidecar tooling</text>
-    <text x="1044" y="336" text-anchor="end">10 stack items</text>
+    <rect x="746.2" y="240" width="120" height="42" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
+    <text x="806.2" y="266" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">RenderDoc</text>
   </g>
 </svg>

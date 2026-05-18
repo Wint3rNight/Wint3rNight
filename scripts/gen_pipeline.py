@@ -17,7 +17,7 @@ PALETTE_PATH = ROOT / "palette.json"
 OUT_PATH = ROOT / "assets" / "pipeline.svg"
 
 WIDTH = 1100
-HEIGHT = 360
+HEIGHT = 320
 
 # pipeline stages: top row, left -> right
 STAGES = [
@@ -80,7 +80,6 @@ def build() -> str:
     d_rgb = hex_to_rgb(dark)
     card_fill = mix(d_rgb, p_rgb, 0.08)
     card_stroke = mix(d_rgb, p_rgb, 0.45)
-    muted = mix(d_rgb, hex_to_rgb(light), 0.55)
 
     out: list[str] = []
 
@@ -112,28 +111,16 @@ def build() -> str:
         out.append(f'  </g>')
 
     # sidecar tools below
-    for label, role, anchor in SIDECARS:
+    for label, _role, anchor in SIDECARS:
         ax = stage_x(anchor) + STAGE_W / 2
         sx = ax - SIDECAR_W / 2
         # dashed connector
         out.append(f'  <line x1="{ax:.1f}" y1="{ROW_Y + STAGE_H}" x2="{ax:.1f}" y2="{SIDECAR_Y}" stroke="{card_stroke}" stroke-width="1" stroke-dasharray="3 4"/>')
         # card
         out.append(f'  <g>')
-        out.append(f'    <rect x="{sx:.1f}" y="{SIDECAR_Y}" width="{SIDECAR_W}" height="{SIDECAR_H}" rx="6" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>')
-        out.append(f'    <text x="{ax:.1f}" y="{SIDECAR_Y + 24}" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
-        out.append(f'    <text x="{ax:.1f}" y="{SIDECAR_Y + 44}" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{muted}" text-anchor="middle">// {role}</text>')
+        out.append(f'    <rect x="{sx:.1f}" y="{SIDECAR_Y}" width="{SIDECAR_W}" height="{SIDECAR_H - 16}" rx="6" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>')
+        out.append(f'    <text x="{ax:.1f}" y="{SIDECAR_Y + 26}" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
         out.append(f'  </g>')
-
-    # caption strip at top
-    out.append(f'  <text x="{LEFT_PAD}" y="36" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{muted}">// the stack, in the order pixels move through it</text>')
-
-    # legend (bottom)
-    legend_y = HEIGHT - 24
-    out.append(f'  <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="11" fill="{muted}">')
-    out.append(f'    <text x="{LEFT_PAD}" y="{legend_y}">— pipeline flow</text>')
-    out.append(f'    <text x="{LEFT_PAD + 160}" y="{legend_y}" fill="{muted}">- - sidecar tooling</text>')
-    out.append(f'    <text x="{WIDTH - LEFT_PAD}" y="{legend_y}" text-anchor="end">10 stack items</text>')
-    out.append(f'  </g>')
 
     out.append('</svg>')
     return '\n'.join(out) + '\n'

@@ -12,6 +12,7 @@ Run with USERNAME and (in CI) GITHUB_TOKEN in the environment.
 import json
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib import error, request
 
@@ -64,6 +65,35 @@ def safe_gh(path: str, default):
     except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
         print(f"[cards] GET {path} failed: {exc}", file=sys.stderr)
         return default
+
+
+def gh_graphql(query: str, variables: dict) -> dict | None:
+    if not TOKEN:
+        return None
+    body = json.dumps({"query": query, "variables": variables}).encode()
+    req = request.Request(
+        "https://api.github.com/graphql",
+        data=body,
+        headers={"Authorization": f"bearer {TOKEN}", "Content-Type": "application/json"},
+    )
+    try:
+        with request.urlopen(req, timeout=20) as r:
+            return json.loads(r.read())
+    except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        print(f"[cards] graphql failed: {exc}", file=sys.stderr)
+        return None
+
+
+def fetch_contributions_total(username: str) -> int | None:
+    """Total contributions across the trailing 12 months. Requires a token."""
+    payload = gh_graphql(
+        """query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions}}}}""",
+        {"login": username},
+    )
+    try:
+        return int(payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
 # --- helpers ----------------------------------------------------------------
@@ -175,8 +205,6 @@ def write_featured(palette: dict[str, str]) -> list[str]:
 
 def aggregate_stats(user: dict, repos: list[dict]) -> dict:
     owned = [r for r in repos if not r.get("fork")]
-    total_stars = sum(r.get("stargazers_count", 0) or 0 for r in owned)
-    total_forks = sum(r.get("forks_count", 0) or 0 for r in owned)
 
     lang_count: dict[str, int] = {}
     for r in owned:
@@ -188,14 +216,23 @@ def aggregate_stats(user: dict, repos: list[dict]) -> dict:
     total_lang = sum(v for _, v in top_langs) or 1
     top_langs_pct = [(name, v, v * 100.0 / total_lang) for name, v in top_langs]
 
+    created_raw = user.get("created_at")
+    years_here: float | None = None
+    if created_raw:
+        try:
+            created = datetime.fromisoformat(created_raw.replace("Z", "+00:00"))
+            years_here = (datetime.now(timezone.utc) - created).days / 365.25
+        except (ValueError, TypeError):
+            years_here = None
+
+    contributions = fetch_contributions_total(USERNAME)
+
     return {
         "public_repos": user.get("public_repos", 0),
-        "followers": user.get("followers", 0),
-        "following": user.get("following", 0),
-        "total_stars": total_stars,
-        "total_forks": total_forks,
+        "languages_used": len(lang_count),
+        "contributions_year": contributions,
+        "years_here": years_here,
         "top_langs": top_langs_pct,
-        "owned_count": len(owned),
     }
 
 
@@ -210,11 +247,13 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
     stroke = mix(d_rgb, p_rgb, 0.42)
     muted = mix(d_rgb, l_rgb, 0.5)
 
+    yrs = stats["years_here"]
+    contrib = stats["contributions_year"]
     metrics = [
         ("public repos", str(stats["public_repos"])),
-        ("total stars", str(stats["total_stars"])),
-        ("followers", str(stats["followers"])),
-        ("forks earned", str(stats["total_forks"])),
+        ("contributions / year", str(contrib) if contrib is not None else "—"),
+        ("languages used", str(stats["languages_used"])),
+        ("years on github", f"{yrs:.1f}" if yrs is not None else "—"),
     ]
     metric_y = 78
     metric_w = (w - 80) // len(metrics)
@@ -263,10 +302,7 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="stats summary for {USERNAME}">
   <rect x="0.5" y="0.5" width="{w-1}" height="{h-1}" rx="10" fill="{fill}" stroke="{stroke}" stroke-width="1"/>
-  <text x="24" y="32" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{primary}" font-weight="700">// {esc(USERNAME)}</text>
-  <text x="{w - 24}" y="32" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{muted}" text-anchor="end">// regenerated weekly</text>
   {''.join(metric_parts)}
-  <text x="{bar_x}" y="{bar_y - 8}" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{muted}">most-used languages</text>
   <g>
     <clipPath id="barClip"><rect x="{bar_x}" y="{bar_y}" width="{bar_w}" height="{bar_h}" rx="4"/></clipPath>
     <g clip-path="url(#barClip)">{''.join(bar_segments)}</g>
@@ -285,7 +321,7 @@ def write_stats(palette: dict[str, str]) -> str:
     stats = aggregate_stats(user, repos)
     path = ASSETS / "stats.svg"
     path.write_text(build_stats_card(stats, palette))
-    print(f"[cards] wrote {path}  ({stats['public_repos']} repos, {stats['total_stars']}★)")
+    print(f"[cards] wrote {path}  ({stats['public_repos']} repos, {stats['languages_used']} langs, contrib={stats['contributions_year']})")
     return str(path.relative_to(ROOT))
 
 
