@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 140" width="340" height="140" role="img" aria-label="Heliora">
+  <rect x="0.5" y="0.5" width="339" height="139" rx="8" fill="#211E28" stroke="#47346E" stroke-width="1"/>
+  <path d="M12 2.75A1.75 1.75 0 0 1 13.75 1h6.5c.97 0 1.75.78 1.75 1.75v17.5A1.75 1.75 0 0 1 20.25 22h-6.5A1.75 1.75 0 0 1 12 20.25V2.75zm-9 0A1.75 1.75 0 0 1 4.75 1h6.5v21h-6.5A1.75 1.75 0 0 1 3 20.25V2.75z" transform="translate(16 16) scale(0.7)" fill="#8658E3" opacity="0.95"/>
+  <text x="44" y="36" font-size="16" font-weight="700" fill="#DADADA" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Heliora</text>
+  <text x="16" y="64" font-size="12" fill="#7A7A7A" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">a custom renderer</text><g transform="translate(16 118)"><circle cx="6" cy="6" r="5.5" fill="#555555"/><text x="20" y="10" font-size="12" fill="#DADADA" opacity="0.85" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">C</text></g><g transform="translate(324 118)"><text x="0" y="10" font-size="12" fill="#DADADA" opacity="0.85" text-anchor="end" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace"><tspan fill="#8658E3">★</tspan> 2  <tspan fill="#8658E3">⑂</tspan> 0</text></g>
+</svg>

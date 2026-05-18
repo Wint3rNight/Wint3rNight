@@ -1,8 +1,8 @@
-name: Rebuild Skyline
+name: Rebuild Cards
 
 on:
   schedule:
-    - cron: "17 4 * * 1"   # weekly, Monday 04:17 UTC
+    - cron: "23 5 * * 1"   # weekly, Monday 05:23 UTC
   workflow_dispatch:
 
 jobs:
@@ -17,14 +17,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Regenerate skyline.svg from live contribution data
+      - name: Regenerate featured + stats cards from live API
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
-        run: python3 scripts/gen_skyline.py
+        run: python3 scripts/gen_cards.py
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "build: refresh skyline"
+          commit_message: "build: refresh featured + stats cards"
           branch: main
-          file_pattern: assets/skyline.svg
+          file_pattern: assets/featured-*.svg assets/stats.svg

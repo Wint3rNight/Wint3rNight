@@ -20,7 +20,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "assets" / "source-skyline.jpg"
+SRC = ROOT / "assets" / "skyline.jpg"
 OUT = ROOT / "palette.json"
 
 FALLBACK = {"primary": "#8B5CF6", "dark": "#0B1026", "light": "#E0E7FF"}
@@ -35,9 +35,8 @@ def hex_of(rgb: tuple[int, int, int]) -> str:
     return "#{:02X}{:02X}{:02X}".format(*rgb)
 
 
-def synth_accent_from_dark(dark_rgb: tuple[int, int, int]) -> str:
-    """Build a saturated violet/cyan accent whose lightness is mid-range."""
-    # Cool violet (260deg) at high saturation, mid lightness.
+def synth_accent() -> str:
+    """Build a saturated violet accent used when the source is grayscale."""
     r, g, b = colorsys.hls_to_rgb(260 / 360, 0.62, 0.72)
     return hex_of((int(r * 255), int(g * 255), int(b * 255)))
 
@@ -73,7 +72,7 @@ def main() -> int:
         primary_sat = rgb_to_hsl(*primary_rgb)[1]
         if primary_sat < 0.08:
             # Grayscale source -> synthesize a real accent so the theme has life.
-            primary_hex = synth_accent_from_dark(dark_rgb)
+            primary_hex = synth_accent()
         else:
             primary_hex = hex_of(primary_rgb)
 

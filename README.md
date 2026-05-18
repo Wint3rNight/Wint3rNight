@@ -1,6 +1,6 @@
-<!-- =========== HERO :: generative skyline =========== -->
+<!-- =========== HERO :: skyline photo =========== -->
 <p align="center">
-  <img src="./assets/skyline.svg" alt="Wint3rNight" width="100%" />
+  <img src="./assets/skyline.jpg" alt="Wint3rNight" width="100%" />
 </p>
 
 <!-- =========== TAGLINE :: hand-rolled animated svg =========== -->
@@ -21,20 +21,12 @@ Currently: learning more of the GPU stack from the bottom up.
 ### featured
 
 <p align="center">
-  <a href="https://github.com/Wint3rNight/Heliora">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=Wint3rNight&repo=Heliora&theme=tokyonight&hide_border=true&bg_color=00000000&icon_color=8658E3&title_color=DADADA" />
-  </a>
-  <a href="https://github.com/Wint3rNight/ZenithMemory">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=Wint3rNight&repo=ZenithMemory&theme=tokyonight&hide_border=true&bg_color=00000000&icon_color=8658E3&title_color=DADADA" />
-  </a>
+  <a href="https://github.com/Wint3rNight/Heliora"><img src="./assets/featured-heliora.svg" alt="Heliora" width="340" /></a>
+  <a href="https://github.com/Wint3rNight/Zenith"><img src="./assets/featured-zenith.svg" alt="Zenith" width="340" /></a>
 </p>
 <p align="center">
-  <a href="https://github.com/Wint3rNight/Tinyforge">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=Wint3rNight&repo=Tinyforge&theme=tokyonight&hide_border=true&bg_color=00000000&icon_color=8658E3&title_color=DADADA" />
-  </a>
-  <a href="https://github.com/Wint3rNight/BehaveYourself">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=Wint3rNight&repo=BehaveYourself&theme=tokyonight&hide_border=true&bg_color=00000000&icon_color=8658E3&title_color=DADADA" />
-  </a>
+  <a href="https://github.com/Wint3rNight/Tinyforge"><img src="./assets/featured-tinyforge.svg" alt="Tinyforge" width="340" /></a>
+  <a href="https://github.com/Wint3rNight/BehaveYourself"><img src="./assets/featured-behaveyourself.svg" alt="BehaveYourself" width="340" /></a>
 </p>
 
 <br/>
@@ -60,8 +52,7 @@ Currently: learning more of the GPU stack from the bottom up.
 ### stats
 
 <p align="center">
-  <img height="160" src="https://github-readme-stats.vercel.app/api?username=Wint3rNight&show_icons=true&theme=tokyonight&hide_border=true&bg_color=00000000&icon_color=8658E3&title_color=DADADA&count_private=true" />
-  <img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Wint3rNight&layout=compact&theme=tokyonight&hide_border=true&bg_color=00000000&langs_count=8&title_color=DADADA" />
+  <img src="./assets/stats.svg" alt="stats summary" width="100%" />
 </p>
 
 <br/>
