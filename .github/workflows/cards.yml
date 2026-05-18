@@ -11,20 +11,26 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Regenerate featured + stats cards from live API
+      - name: Regenerate featured + stats cards
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
         run: python3 scripts/gen_cards.py
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Regenerate activity flow chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+        run: python3 scripts/gen_activity.py
+
+      - uses: stefanzweifel/git-auto-commit-action@v6
         with:
-          commit_message: "build: refresh featured + stats cards"
+          commit_message: "build: refresh cards + activity"
           branch: main
-          file_pattern: assets/featured-*.svg assets/stats.svg
+          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg

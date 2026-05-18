@@ -17,7 +17,7 @@ PALETTE_PATH = ROOT / "palette.json"
 OUT_PATH = ROOT / "assets" / "pipeline.svg"
 
 WIDTH = 1100
-HEIGHT = 320
+HEIGHT = 220
 
 # pipeline stages: top row, left -> right
 STAGES = [
@@ -37,14 +37,14 @@ SIDECARS = [
 ]
 
 STAGE_W = 134
-STAGE_H = 78
-ROW_Y = 70
+STAGE_H = 70
+ROW_Y = 22
 LEFT_PAD = 56
 GAP = (WIDTH - 2 * LEFT_PAD - len(STAGES) * STAGE_W) / (len(STAGES) - 1)
 
 SIDECAR_W = 120
-SIDECAR_H = 58
-SIDECAR_Y = 240
+SIDECAR_H = 46
+SIDECAR_Y = 150
 
 
 def load_palette() -> dict[str, str]:
@@ -106,8 +106,8 @@ def build() -> str:
         out.append(f'    <rect x="{x:.1f}" y="{ROW_Y}" width="{STAGE_W}" height="{STAGE_H}" rx="6" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>')
         # stage index pip
         out.append(f'    <circle cx="{x + 12:.1f}" cy="{ROW_Y + 12:.1f}" r="3.2" fill="{primary}"/>')
-        out.append(f'    <text x="{x + STAGE_W/2:.1f}" y="{ROW_Y + 32}" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
-        out.append(f'    <text x="{x + STAGE_W/2:.1f}" y="{ROW_Y + 56}" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{primary}" text-anchor="middle">{sub}</text>')
+        out.append(f'    <text x="{x + STAGE_W/2:.1f}" y="{ROW_Y + 28}" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
+        out.append(f'    <text x="{x + STAGE_W/2:.1f}" y="{ROW_Y + 50}" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="{primary}" text-anchor="middle">{sub}</text>')
         out.append(f'  </g>')
 
     # sidecar tools below
@@ -118,8 +118,8 @@ def build() -> str:
         out.append(f'  <line x1="{ax:.1f}" y1="{ROW_Y + STAGE_H}" x2="{ax:.1f}" y2="{SIDECAR_Y}" stroke="{card_stroke}" stroke-width="1" stroke-dasharray="3 4"/>')
         # card
         out.append(f'  <g>')
-        out.append(f'    <rect x="{sx:.1f}" y="{SIDECAR_Y}" width="{SIDECAR_W}" height="{SIDECAR_H - 16}" rx="6" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>')
-        out.append(f'    <text x="{ax:.1f}" y="{SIDECAR_Y + 26}" font-size="14" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
+        out.append(f'    <rect x="{sx:.1f}" y="{SIDECAR_Y}" width="{SIDECAR_W}" height="{SIDECAR_H}" rx="6" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>')
+        out.append(f'    <text x="{ax:.1f}" y="{SIDECAR_Y + 28}" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="{light}" text-anchor="middle">{label}</text>')
         out.append(f'  </g>')
 
     out.append('</svg>')

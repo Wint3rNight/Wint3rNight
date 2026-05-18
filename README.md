@@ -8,15 +8,11 @@
   <img src="./assets/header.svg" alt="taglines" width="640" />
 </p>
 
-<br/>
-
 ### whoami
 
 Real-time renderer and engine code. I spend most of my time between the draw call and the swap buffer.
 C++ daily, GLSL/HLSL when something is on fire, CUDA when I'm feeling brave.
 Currently: learning more of the GPU stack from the bottom up.
-
-<br/>
 
 ### featured
 
@@ -29,9 +25,7 @@ Currently: learning more of the GPU stack from the bottom up.
   <a href="https://github.com/Wint3rNight/BehaveYourself"><img src="./assets/featured-behaveyourself.svg" alt="BehaveYourself" width="340" /></a>
 </p>
 
-<br/>
-
-<!-- =========== ACTIVITY :: snake + 3d contrib =========== -->
+<!-- =========== ACTIVITY :: snake + linear flow =========== -->
 ### activity
 
 <picture>
@@ -44,10 +38,8 @@ Currently: learning more of the GPU stack from the bottom up.
 </picture>
 
 <p align="center">
-  <img src="./profile-3d-contrib/profile-night-view.svg" alt="3d contributions skyline" />
+  <img src="./assets/activity.svg" alt="contribution flow" width="100%" />
 </p>
-
-<br/>
 
 ### stats
 
@@ -55,15 +47,11 @@ Currently: learning more of the GPU stack from the bottom up.
   <img src="./assets/stats.svg" alt="stats summary" width="100%" />
 </p>
 
-<br/>
-
 ### stack
 
 <p align="center">
   <img src="./assets/pipeline.svg" alt="render pipeline / stack" width="100%" />
 </p>
-
-<br/>
 
 ### elsewhere
 
