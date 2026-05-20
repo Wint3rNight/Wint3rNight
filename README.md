@@ -10,9 +10,7 @@
 
 ### whoami
 
-Real-time renderer and engine code. I spend most of my time between the draw call and the swap buffer.
-C++ daily, GLSL/HLSL when something is on fire, CUDA when I'm feeling brave.
-Currently: learning more of the GPU stack from the bottom up.
+Undergraduate building real-time renderers in Vulkan and custom memory allocators, with a focus on GPU performance and engine architecture.
 
 ### featured
 
