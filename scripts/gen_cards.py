@@ -367,7 +367,7 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
         legend_parts.append(
             f'<g transform="translate({lx:.0f} {ly:.0f})" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">'
             f'<circle cx="6" cy="-4" r="5" fill="{color}"/>'
-            f'<text x="18" y="0" font-size="11" fill="{light}" opacity="0.9">{esc(name)} <tspan fill="{muted}">{pct:.0f}%</tspan></text>'
+            f'<text x="18" y="0" font-size="11" fill="{light}" opacity="0.9">{esc(name)} <tspan fill="{muted}">{pct:.1f}%</tspan></text>'
             f'</g>'
         )
         cursor += seg_w
