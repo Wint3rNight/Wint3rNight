@@ -29,8 +29,14 @@ jobs:
           USERNAME: ${{ github.repository_owner }}
         run: python3 scripts/gen_activity.py
 
+      - name: Regenerate now-building card
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+        run: python3 scripts/gen_nowbuilding.py
+
       - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "build: refresh cards + activity"
           branch: main
-          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg
+          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg assets/nowbuilding.svg

@@ -8,11 +8,27 @@
   <img src="./assets/header.svg" alt="taglines" width="640" />
 </p>
 
+<p align="center">
+  <img src="./assets/shader_hero.svg" alt="shader" width="100%" />
+</p>
+
 ### whoami
 
 Real-time renderer and engine code. I spend most of my time between the draw call and the swap buffer.
 C++ daily, GLSL/HLSL when something is on fire, CUDA when I'm feeling brave.
 Currently: learning more of the GPU stack from the bottom up.
+
+<p align="center">
+  <img src="./assets/terminal.svg" alt="boot sequence" width="100%" />
+</p>
+
+### now
+
+<p align="center">
+  <img src="./assets/nowbuilding.svg" alt="now building" width="100%" />
+</p>
+
+<br/>
 
 ### featured
 

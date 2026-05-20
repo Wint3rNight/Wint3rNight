@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 64" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="shader strip">
+  <defs>
+    <filter id="frag" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.11" numOctaves="3" seed="7" result="n">
+        <animate attributeName="baseFrequency" values="0.018 0.11;0.024 0.08;0.018 0.11" dur="9s" repeatCount="indefinite"/>
+      </feTurbulence>
+      <!-- map noise to dark-purple → violet palette (#8658E3) -->
+      <feColorMatrix type="matrix"
+        values="0.20 0.20 0.20 0 0.05
+                0.12 0.12 0.12 0 0.03
+                0.30 0.30 0.30 0 0.10
+                0    0    0    1 0"
+        in="n" result="col"/>
+    </filter>
+    <linearGradient id="fade-x" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%"   stop-color="#0D0A14" stop-opacity="1"/>
+      <stop offset="10%"  stop-color="#0D0A14" stop-opacity="0"/>
+      <stop offset="90%"  stop-color="#0D0A14" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0D0A14" stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="fade-y" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%"   stop-color="#0D0A14" stop-opacity="0.7"/>
+      <stop offset="35%"  stop-color="#0D0A14" stop-opacity="0"/>
+      <stop offset="65%"  stop-color="#0D0A14" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#0D0A14" stop-opacity="0.7"/>
+    </linearGradient>
+    <pattern id="scan" x="0" y="0" width="1100" height="4" patternUnits="userSpaceOnUse">
+      <rect width="1100" height="1" fill="#000" fill-opacity="0.10"/>
+    </pattern>
+  </defs>
+  <rect width="1100" height="64" fill="#0D0A14"/>
+  <rect width="1100" height="64" fill="white" filter="url(#frag)" opacity="0.92"/>
+  <rect width="1100" height="64" fill="url(#scan)"/>
+  <rect width="1100" height="64" fill="url(#fade-x)"/>
+  <rect width="1100" height="64" fill="url(#fade-y)"/>
+</svg>
