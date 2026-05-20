@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 node_modules/
 .claude/
+profile-readme-spec.md
+
