@@ -37,6 +37,8 @@ Currently: learning more of the GPU stack from the bottom up.
        src="https://raw.githubusercontent.com/Wint3rNight/Wint3rNight/output/snake.svg" />
 </picture>
 
+<br/>
+
 <p align="center">
   <img src="./assets/activity.svg" alt="contribution flow" width="100%" />
 </p>
