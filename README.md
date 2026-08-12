@@ -27,6 +27,13 @@ Undergraduate low-level C++ programmer working on GPU and systems performance â€
   <a href="https://github.com/search?q=author%3AWint3rNight+type%3Apr&amp;type=pullrequests"><img src="./assets/oss.svg" alt="upstream contributions" width="100%" /></a>
 </p>
 
+<!-- =========== STACK :: two-lane pipeline, marked with upstream work =========== -->
+### stack
+
+<p align="center">
+  <img src="./assets/pipeline.svg" alt="render pipeline / stack" width="100%" />
+</p>
+
 <!-- =========== ACTIVITY :: snake + linear flow =========== -->
 ### activity
 
@@ -45,16 +52,10 @@ Undergraduate low-level C++ programmer working on GPU and systems performance â€
   <img src="./assets/activity.svg" alt="contribution flow" width="100%" />
 </p>
 
-### stats
+### languages
 
 <p align="center">
-  <img src="./assets/stats.svg" alt="stats summary" width="100%" />
-</p>
-
-### stack
-
-<p align="center">
-  <img src="./assets/pipeline.svg" alt="render pipeline / stack" width="100%" />
+  <img src="./assets/stats.svg" alt="language breakdown" width="100%" />
 </p>
 
 ### elsewhere

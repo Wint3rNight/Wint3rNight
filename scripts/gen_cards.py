@@ -12,7 +12,6 @@ Run with USERNAME and (in CI) GITHUB_TOKEN in the environment.
 import json
 import os
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from urllib import error, request
 
@@ -97,75 +96,6 @@ def safe_gh(path: str, default):
     except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
         print(f"[cards] GET {path} failed: {exc}", file=sys.stderr)
         return default
-
-
-def gh_graphql(query: str, variables: dict) -> dict | None:
-    if not TOKEN:
-        return None
-    body = json.dumps({"query": query, "variables": variables}).encode()
-    req = request.Request(
-        "https://api.github.com/graphql",
-        data=body,
-        headers={"Authorization": f"bearer {TOKEN}", "Content-Type": "application/json"},
-    )
-    try:
-        with request.urlopen(req, timeout=20) as r:
-            return json.loads(r.read())
-    except (error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-        print(f"[cards] graphql failed: {exc}", file=sys.stderr)
-        return None
-
-
-def fetch_contributions_total(username: str) -> int | None:
-    """Total contributions in the trailing 12 months.
-
-    Strategy:
-    1. GraphQL (fast, exact) — only works in CI where GITHUB_TOKEN is set.
-    2. REST contributions calendar scrape — public, no token needed.
-       GitHub exposes a contributions calendar JSON-ish endpoint at
-       /users/{user}/contributions which returns an SVG; we avoid that.
-       Instead we hit the user's public events feed across the year.
-       That's rate-limited to 300 public events, so it under-counts heavy
-       contributors but gives a reasonable number without auth.
-    """
-    # --- try GraphQL first (CI path) ---
-    payload = gh_graphql(
-        """query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions}}}}""",
-        {"login": username},
-    )
-    if payload:
-        try:
-            return int(payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["totalContributions"])
-        except (KeyError, TypeError, ValueError):
-            pass
-
-    # --- REST fallback: public events (no auth needed) ---
-    # Cap at 10 pages × 100 events = 1000 events max
-    total = 0
-    from datetime import datetime, timezone, timedelta
-    cutoff = datetime.now(timezone.utc) - timedelta(days=365)
-    for page in range(1, 11):
-        events = safe_gh(f"/users/{username}/events/public?per_page=100&page={page}", [])
-        if not isinstance(events, list) or not events:
-            break
-        page_has_old = False
-        for ev in events:
-            created_raw = ev.get("created_at", "")
-            try:
-                created = datetime.fromisoformat(created_raw.replace("Z", "+00:00"))
-            except (ValueError, TypeError):
-                continue
-            if created < cutoff:
-                page_has_old = True
-                break
-            # Count pushes by commits, everything else as 1
-            if ev.get("type") == "PushEvent":
-                total += len((ev.get("payload") or {}).get("commits") or [])
-            else:
-                total += 1
-        if page_has_old:
-            break
-    return total if total else None
 
 
 # --- helpers ----------------------------------------------------------------
@@ -336,7 +266,7 @@ def write_featured(palette: dict[str, str]) -> list[str]:
 
 # --- stats card -------------------------------------------------------------
 
-def aggregate_stats(user: dict, repos: list[dict]) -> dict:
+def aggregate_stats(repos: list[dict]) -> dict:
     """Aggregate language stats by summing raw bytes across all owned repos.
 
     GitHub exposes bytes-per-language via /repos/{owner}/{repo}/languages.
@@ -353,57 +283,31 @@ def aggregate_stats(user: dict, repos: list[dict]) -> dict:
         for lang, byte_count in langs.items():
             lang_bytes[lang] = lang_bytes.get(lang, 0) + byte_count
 
-    all_lang_count = len(lang_bytes)  # total distinct languages (for the counter)
-
     # Top N by bytes, percentages relative to the top-N subtotal
     sorted_langs = sorted(lang_bytes.items(), key=lambda kv: kv[1], reverse=True)
     top_langs = sorted_langs[:TOP_LANGS_COUNT]
     total_bytes = sum(v for _, v in top_langs) or 1
     top_langs_pct = [(name, b, b * 100.0 / total_bytes) for name, b in top_langs]
 
-    created_raw = user.get("created_at")
-    years_here: float | None = None
-    if created_raw:
-        try:
-            created = datetime.fromisoformat(created_raw.replace("Z", "+00:00"))
-            years_here = (datetime.now(timezone.utc) - created).days / 365.25
-        except (ValueError, TypeError):
-            years_here = None
-
-    contributions = fetch_contributions_total(USERNAME)
-
-    # `public_repos` is no longer a meaningful tile: it counts the upstream
-    # forks, so it inflates every time a contribution is made. The merged
-    # upstream PR count says the thing that number was standing in for.
-    try:
-        from gen_oss import upstream_summary
-
-        merged_prs = upstream_summary()["merged"]
-    except (ImportError, KeyError, TypeError) as exc:
-        print(f"[cards] upstream summary unavailable: {exc}", file=sys.stderr)
-        merged_prs = None
-
-    return {
-        "merged_prs": merged_prs,
-        "languages_used": all_lang_count,
-        "contributions_year": contributions,
-        "years_here": years_here,
-        "top_langs": top_langs_pct,
-    }
+    return {"top_langs": top_langs_pct}
 
 
 def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
-    """Render the stats SVG.
+    """Render the language breakdown.
 
-    Card height grows by 24 px for every extra legend row beyond the first,
-    so 12 languages sit cleanly in two rows of 6.
+    This card used to open with a strip of big-number metrics, but the OSS
+    card directly above it uses the identical treatment, down to sharing a
+    leading value — so the page showed the same component twice. The
+    numbers live there now and this card is just the language bar.
+
+    Height grows by 24 px for every extra legend row beyond the first, so
+    12 languages sit cleanly in two rows of 6.
     """
     top_langs = stats["top_langs"]
     n = len(top_langs)
     per_row = 6
     legend_rows = max(1, -(-n // per_row))  # ceiling division
     w = 1040
-    h = 200 + (legend_rows - 1) * 24
 
     primary = palette["primary"]
     light = palette["light"]
@@ -414,34 +318,11 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
     stroke = mix(d_rgb, p_rgb, 0.42)
     muted = mix(d_rgb, l_rgb, 0.5)
 
-    yrs = stats["years_here"]
-    contrib = stats["contributions_year"]
-    merged = stats["merged_prs"]
-    metrics = [
-        ("merged upstream PRs", str(merged) if merged is not None else "—"),
-        ("contributions / year", str(contrib) if contrib is not None else "—"),
-        ("languages used", str(stats["languages_used"])),
-        ("years on github", f"{yrs:.1f}" if yrs is not None else "—"),
-    ]
-    metric_y = 78
-    metric_w = (w - 80) // len(metrics)
     metric_parts: list[str] = []
-    for i, (label, value) in enumerate(metrics):
-        cx = 40 + metric_w * i + metric_w / 2
-        metric_parts.append(
-            f'<g text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">'
-            f'<text x="{cx:.0f}" y="{metric_y}" font-size="36" font-weight="700" fill="{light}">{value}</text>'
-            f'<text x="{cx:.0f}" y="{metric_y + 24}" font-size="12" fill="{muted}">{label}</text>'
-            f'</g>'
-        )
-        if i < len(metrics) - 1:
-            sep_x = 40 + metric_w * (i + 1)
-            metric_parts.append(
-                f'<line x1="{sep_x}" y1="{metric_y - 30}" x2="{sep_x}" y2="{metric_y + 28}" stroke="{stroke}" stroke-width="1"/>'
-            )
 
     # ── language bar ──────────────────────────────────────────────
-    bar_y = 150
+    bar_y = 28
+    h = bar_y + 32 + (legend_rows - 1) * 24 + 20
     bar_x = 40
     bar_w = w - 80
     bar_h = 14
@@ -487,14 +368,13 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
 
 
 def write_stats(palette: dict[str, str]) -> str:
-    user = safe_gh(f"/users/{USERNAME}", {})
     repos = safe_gh(f"/users/{USERNAME}/repos?per_page=100&type=owner&sort=updated", []) or []
     if not isinstance(repos, list):
         repos = []
-    stats = aggregate_stats(user, repos)
+    stats = aggregate_stats(repos)
     path = ASSETS / "stats.svg"
     path.write_text(build_stats_card(stats, palette))
-    print(f"[cards] wrote {path}  ({stats['merged_prs']} merged PRs, {stats['languages_used']} langs, contrib={stats['contributions_year']})")
+    print(f"[cards] wrote {path}  ({len(stats['top_langs'])} languages)")
     return str(path.relative_to(ROOT))
 
 
