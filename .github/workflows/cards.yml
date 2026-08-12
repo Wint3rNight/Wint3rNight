@@ -2,7 +2,7 @@ name: Rebuild Cards
 
 on:
   schedule:
-    - cron: "23 5 * * 1"   # weekly, Monday 05:23 UTC
+    - cron: "23 5 * * *"   # daily, 05:23 UTC
   workflow_dispatch:
 
 jobs:
@@ -36,8 +36,16 @@ jobs:
           GH_USER: ${{ github.repository_owner }}
         run: python3 scripts/gen_activity.py
 
+      # The stack diagram marks which stages have upstream contributions,
+      # so it needs regenerating when those counts change.
+      - name: Regenerate stack diagram
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: ${{ github.repository_owner }}
+        run: python3 scripts/gen_pipeline.py
+
       - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "build: refresh cards + activity"
           branch: main
-          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg assets/oss.svg
+          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg assets/oss.svg assets/pipeline.svg

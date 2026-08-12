@@ -1,103 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 178" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="render pipeline / stack">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 292" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="stack: raster and compute pipelines">
   <defs>
-    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8658E3"/>
-    </marker>
-    <linearGradient id="rail" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0%"   stop-color="#8658E3" stop-opacity="0"/>
-      <stop offset="10%"  stop-color="#8658E3" stop-opacity="0.7"/>
-      <stop offset="90%"  stop-color="#8658E3" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#8658E3" stop-opacity="0"/>
-    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8658E3"/></marker>
   </defs>
-
-  <!-- rail -->
-  <rect x="20" y="56.5" width="1060" height="1.2" fill="url(#rail)"/>
-
-  <!-- arrows -->
-  <line x1="176" y1="57" x2="198" y2="57" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="358" y1="57" x2="380" y2="57" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="540" y1="57" x2="562" y2="57" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="722" y1="57" x2="744" y2="57" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-  <line x1="904" y1="57" x2="926" y2="57" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
-
-  <!-- Box 0: application — C++ -->
-  <g>
-    <rect x="20" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="32" cy="28" r="3.2" fill="#8658E3"/>
-    <text x="95" y="42"  font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">application</text>
-    <text x="95" y="60"  font-size="12" font-weight="700" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">C++</text>
-    <text x="95" y="78"  font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">engine · ECS · allocators</text>
-  </g>
-
-  <!-- Box 1: graphics api — Vulkan · OpenGL -->
-  <g>
-    <rect x="202" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="214" cy="28" r="3.2" fill="#8658E3"/>
-    <text x="277" y="42" font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">graphics api</text>
-    <text x="277" y="60" font-size="11" font-weight="700" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Vulkan · OpenGL</text>
-    <text x="277" y="78" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">deferred · PBR · IBL</text>
-  </g>
-
-  <!-- Box 2: shaders — GLSL · HLSL -->
-  <g>
-    <rect x="384" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="396" cy="28" r="3.2" fill="#8658E3"/>
-    <text x="459" y="42" font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">shaders</text>
-    <text x="459" y="60" font-size="12" font-weight="700" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">GLSL · HLSL</text>
-    <text x="459" y="78" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">IBL · SSAO · shadows</text>
-  </g>
-
-  <!-- Box 3: IR — SPIR-V -->
-  <g>
-    <rect x="566" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="578" cy="28" r="3.2" fill="#8658E3"/>
-    <text x="641" y="42" font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">IR</text>
-    <text x="641" y="60" font-size="12" font-weight="700" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">SPIR-V</text>
-    <text x="641" y="78" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">compiler target</text>
-  </g>
-
-  <!-- Box 4: compute — CUDA (green accent) -->
-  <g>
-    <rect x="748" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="760" cy="28" r="3.2" fill="#76b900"/>
-    <text x="823" y="42" font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">compute</text>
-    <text x="823" y="60" font-size="12" font-weight="700" fill="#76b900" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">CUDA</text>
-    <text x="823" y="78" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">GEMM · SIMT</text>
-  </g>
-
-  <!-- Box 5: framebuffer -->
-  <g>
-    <rect x="930" y="16" width="150" height="84" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <circle cx="942" cy="28" r="3.2" fill="#8658E3"/>
-    <text x="1005" y="42" font-size="11" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">framebuffer</text>
-    <text x="1005" y="60" font-size="11" font-weight="700" fill="#8658E3" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">HDR · tonemapping</text>
-    <text x="1005" y="78" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">→ display</text>
-  </g>
-
-  <!-- Sub-items via dashed drop-downs -->
-
-  <!-- CMake below application (center x=95) -->
-  <line x1="95" y1="100" x2="95" y2="114" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="35" y="114" width="120" height="48" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="95" y="134" font-size="12" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">CMake</text>
-    <text x="95" y="152" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">build</text>
-  </g>
-
-  <!-- RenderDoc below shaders (center x=459) -->
-  <line x1="459" y1="100" x2="459" y2="114" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="399" y="114" width="120" height="48" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="459" y="134" font-size="12" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">RenderDoc</text>
-    <text x="459" y="152" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">GPU debugger</text>
-  </g>
-
-  <!-- Nsight below compute (center x=823) -->
-  <line x1="823" y1="100" x2="823" y2="114" stroke="#4A3574" stroke-width="1" stroke-dasharray="3 4"/>
-  <g>
-    <rect x="763" y="114" width="120" height="48" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/>
-    <text x="823" y="134" font-size="12" font-weight="700" fill="#DADADA" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">Nsight</text>
-    <text x="823" y="152" font-size="10"                  fill="#7A7A7A" text-anchor="middle" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">CUDA profiler</text>
-  </g>
+  <text x="40" y="20" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" letter-spacing="1.5">RASTER</text>
+  <g><rect x="40.0" y="32" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="52.0" cy="44.0" r="3.2" fill="#8658E3"/><text x="126.0" y="59" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">application</text><text x="126.0" y="79" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">C++</text><text x="126.0" y="97" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">engine · ECS · allocators</text></g>
+  <line x1="218.0" y1="71.0" x2="248.0" y2="71.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="252.0" y="32" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="264.0" cy="44.0" r="3.2" fill="#8658E3"/><text x="338.0" y="59" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">shaders</text><text x="338.0" y="79" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">GLSL</text><text x="338.0" y="97" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">PBR · SSAO · CSM</text></g>
+  <line x1="430.0" y1="71.0" x2="460.0" y2="71.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="464.0" y="32" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="476.0" cy="44.0" r="3.2" fill="#8658E3"/><text x="550.0" y="59" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">IR</text><text x="550.0" y="79" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">SPIR-V</text><text x="550.0" y="97" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">compiler target</text></g>
+  <line x1="642.0" y1="71.0" x2="672.0" y2="71.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="676.0" y="32" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="688.0" cy="44.0" r="3.2" fill="#8658E3"/><text x="762.0" y="59" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">graphics api</text><text x="762.0" y="79" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">Vulkan · OpenGL</text><text x="762.0" y="97" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">deferred · bindless</text></g>
+  <line x1="854.0" y1="71.0" x2="884.0" y2="71.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="888.0" y="32" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="900.0" cy="44.0" r="3.2" fill="#8658E3"/><text x="974.0" y="59" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">framebuffer</text><text x="974.0" y="79" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">HDR · TAA</text><text x="974.0" y="97" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">→ display</text></g>
+  <line x1="550.0" y1="110" x2="550.0" y2="130" stroke="#8658E3" stroke-width="1" stroke-dasharray="3 4" opacity="0.8"/>
+  <g><rect x="509.0" y="130" width="82.0" height="28" rx="14" fill="#221E2A" stroke="#8658E3" stroke-width="1"/><text x="550.0" y="142" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">glslang</text><text x="550.0" y="153" font-size="9.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">2 merged</text></g>
+  <line x1="762.0" y1="110" x2="762.0" y2="130" stroke="#7A7A7A" stroke-width="1" stroke-dasharray="3 4" opacity="0.8"/>
+  <g><rect x="668.5" y="130" width="187.0" height="28" rx="14" fill="#221E2A" stroke="#7A7A7A" stroke-width="1"/><text x="762.0" y="142" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">Vulkan-ValidationLayers</text><text x="762.0" y="153" font-size="9.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">1 in review</text></g>
+  <text x="1060" y="148" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="end">upstream contributions</text>
+  <text x="40" y="184" font-size="11" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" letter-spacing="1.5">COMPUTE</text>
+  <g><rect x="40.0" y="196" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="52.0" cy="208.0" r="3.2" fill="#8658E3"/><text x="126.0" y="223" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">kernels</text><text x="126.0" y="243" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">CUDA · cuBLAS</text><text x="126.0" y="261" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">GEMM · SIMT</text></g>
+  <line x1="218.0" y1="235.0" x2="248.0" y2="235.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="252.0" y="196" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="264.0" cy="208.0" r="3.2" fill="#8658E3"/><text x="338.0" y="223" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">optimization</text><text x="338.0" y="243" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">tiling · float4</text><text x="338.0" y="261" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">occupancy analysis</text></g>
+  <line x1="430.0" y1="235.0" x2="460.0" y2="235.0" stroke="#8658E3" stroke-width="1.6" marker-end="url(#arr)"/>
+  <g><rect x="464.0" y="196" width="172" height="78" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1"/><circle cx="476.0" cy="208.0" r="3.2" fill="#8658E3"/><text x="550.0" y="223" font-size="13" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">profiling</text><text x="550.0" y="243" font-size="12" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#8658E3" text-anchor="middle">Nsight Compute</text><text x="550.0" y="261" font-size="10.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">4400 GFLOPS</text></g>
+  <g><rect x="692.0" y="212" width="108" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1" stroke-dasharray="4 3"/><text x="746.0" y="234" font-size="11.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">CMake</text><text x="746.0" y="249" font-size="9.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">build</text></g>
+  <g><rect x="820.0" y="212" width="108" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1" stroke-dasharray="4 3"/><text x="874.0" y="234" font-size="11.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">RenderDoc</text><text x="874.0" y="249" font-size="9.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">frame debug</text></g>
+  <g><rect x="948.0" y="212" width="108" height="46" rx="6" fill="#221E2A" stroke="#4A3574" stroke-width="1" stroke-dasharray="4 3"/><text x="1002.0" y="234" font-size="11.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-weight="700" fill="#DADADA" text-anchor="middle">gdb · ASan</text><text x="1002.0" y="249" font-size="9.5" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" fill="#7A7A7A" text-anchor="middle">systems</text></g>
 </svg>

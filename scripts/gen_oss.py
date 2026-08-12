@@ -118,6 +118,22 @@ def group_by_repo(prs: list[dict]) -> list[dict]:
     return sorted(grouped.values(), key=lambda e: (-e["merged"], -e["stars"]))
 
 
+def upstream_by_repo() -> dict[str, dict[str, int]]:
+    """Per-project merged/open counts, keyed by "owner/repo".
+
+    Skips the star lookups that group_by_repo does — callers that only
+    need counts pay for one search request, not one per project.
+    """
+    prs = fetch_upstream_prs(USERNAME)
+    if prs is None:
+        return {}
+    out: dict[str, dict[str, int]] = {}
+    for pr in prs:
+        entry = out.setdefault(pr["repo"], {"merged": 0, "open": 0})
+        entry["merged" if pr["merged"] else "open"] += 1
+    return out
+
+
 def upstream_summary() -> dict:
     """Counts for other generators to reuse (the stats card wants `merged`)."""
     prs = fetch_upstream_prs(USERNAME)
