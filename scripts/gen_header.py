@@ -16,7 +16,7 @@ PALETTE_PATH = ROOT / "palette.json"
 OUT_PATH = ROOT / "assets" / "header.svg"
 
 TAGLINES = [
-    "I code sometimes",
+    "Renderer engineer",
     "Graphics programmer",
     "GPU programmer",
     "Engine programmer",

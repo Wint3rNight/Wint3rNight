@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PALETTE_PATH = ROOT / "palette.json"
 OUT_PATH = ROOT / "assets" / "activity.svg"
 
-USERNAME = os.environ.get("USERNAME") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Wint3rNight"
+# Deliberately NOT reading $USERNAME: on Linux and macOS that's the login
+# name, so a local run silently charts a stranger's contribution history.
+USERNAME = os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Wint3rNight"
 TOKEN = os.environ.get("GITHUB_TOKEN")
 
 DAYS = 365

@@ -10,17 +10,21 @@
 
 ### whoami
 
-Undergraduate building real-time renderers in Vulkan and custom memory allocators, with a focus on GPU performance and engine architecture.
+Undergraduate low-level C++ programmer working on GPU and systems performance — CUDA kernel optimization, real-time Vulkan rendering, and merged contributions to the Khronos graphics toolchain.
 
 ### featured
 
 <p align="center">
+  <a href="https://github.com/Wint3rNight/Tinyforge"><img src="./assets/featured-tinyforge.svg" alt="Tinyforge" width="340" /></a>
   <a href="https://github.com/Wint3rNight/Heliora"><img src="./assets/featured-heliora.svg" alt="Heliora" width="340" /></a>
   <a href="https://github.com/Wint3rNight/Zenith"><img src="./assets/featured-zenith.svg" alt="Zenith" width="340" /></a>
 </p>
+
+<!-- =========== OPEN SOURCE :: generated from the GitHub search API =========== -->
+### open source
+
 <p align="center">
-  <a href="https://github.com/Wint3rNight/Tinyforge"><img src="./assets/featured-tinyforge.svg" alt="Tinyforge" width="340" /></a>
-  <a href="https://github.com/Wint3rNight/BehaveYourself"><img src="./assets/featured-behaveyourself.svg" alt="BehaveYourself" width="340" /></a>
+  <a href="https://github.com/search?q=author%3AWint3rNight+type%3Apr&amp;type=pullrequests"><img src="./assets/oss.svg" alt="upstream contributions" width="100%" /></a>
 </p>
 
 <!-- =========== ACTIVITY :: snake + linear flow =========== -->

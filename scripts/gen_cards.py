@@ -20,9 +20,21 @@ ROOT = Path(__file__).resolve().parents[1]
 PALETTE_PATH = ROOT / "palette.json"
 ASSETS = ROOT / "assets"
 
-USERNAME = os.environ.get("USERNAME") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Wint3rNight"
+# Deliberately NOT reading $USERNAME: on Linux and macOS that's the login
+# name, so a local run silently renders a stranger's GitHub data.
+# GITHUB_REPOSITORY_OWNER is set automatically in every Actions run.
+USERNAME = os.environ.get("GH_USER") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Wint3rNight"
 TOKEN = os.environ.get("GITHUB_TOKEN")
-FEATURED_REPOS = ["Heliora", "Zenith", "Tinyforge", "BehaveYourself"]
+FEATURED_REPOS = ["Tinyforge", "Heliora", "Zenith"]
+
+# Star counts undersell this work — a 9.5x GEMM speedup reads as "★1".
+# Where a repo has a headline measurement, it replaces the star/fork
+# footer. Repos absent from this map keep the star/fork line.
+REPO_METRICS = {
+    "Tinyforge": "9.5x  ·  4400 GFLOPS @ N=4096",
+    "Heliora": "11 ms @ 1080p  ·  1.13M tris",
+    "Zenith": "3.2 ns/op scratch  ·  5.3x malloc",
+}
 
 # GitHub's language colors. Falls back to a palette-derived colour for unknowns.
 LANG_COLORS = {
@@ -204,6 +216,21 @@ def build_repo_card(repo: dict, palette: dict[str, str]) -> str:
     lang_color = LANG_COLORS.get(lang, primary)
     error_state = repo.get("__error__")
 
+    mono = "JetBrains Mono, Fira Code, ui-monospace, monospace"
+    metric = REPO_METRICS.get(name)
+    if metric:
+        # 11px so the longest metric (~34 chars) clears the language pip
+        # on the left at this card width.
+        metric_footer = (
+            f'<text x="0" y="10" font-size="11" fill="{primary}" text-anchor="end" '
+            f'font-family="{mono}" font-weight="700">{esc(metric)}</text>'
+        )
+    else:
+        metric_footer = (
+            f'<text x="0" y="10" font-size="12" fill="{light}" opacity="0.85" text-anchor="end" font-family="{mono}">'
+            f'<tspan fill="{primary}">★</tspan> {stars}  <tspan fill="{primary}">⑂</tspan> {forks}</text>'
+        )
+
     # repo icon (octicon "repo" simplified)
     icon = (
         f'<path d="M12 2.75A1.75 1.75 0 0 1 13.75 1h6.5c.97 0 1.75.78 1.75 1.75v17.5A1.75 1.75 0 0 1 20.25 22h-6.5A1.75 1.75 0 0 1 12 20.25V2.75zm-9 0A1.75 1.75 0 0 1 4.75 1h6.5v21h-6.5A1.75 1.75 0 0 1 3 20.25V2.75z" '
@@ -223,8 +250,7 @@ def build_repo_card(repo: dict, palette: dict[str, str]) -> str:
             f'<text x="20" y="10" font-size="12" fill="{light}" opacity="0.85" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">{esc(lang)}</text>'
             f'</g>'
             f'<g transform="translate({w - 16} {h - 22})">'
-            f'<text x="0" y="10" font-size="12" fill="{light}" opacity="0.85" text-anchor="end" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">'
-            f'<tspan fill="{primary}">★</tspan> {stars}  <tspan fill="{primary}">⑂</tspan> {forks}</text>'
+            f'{metric_footer}'
             f'</g>'
         )
 
@@ -288,8 +314,19 @@ def aggregate_stats(user: dict, repos: list[dict]) -> dict:
 
     contributions = fetch_contributions_total(USERNAME)
 
+    # `public_repos` is no longer a meaningful tile: it counts the upstream
+    # forks, so it inflates every time a contribution is made. The merged
+    # upstream PR count says the thing that number was standing in for.
+    try:
+        from gen_oss import upstream_summary
+
+        merged_prs = upstream_summary()["merged"]
+    except (ImportError, KeyError, TypeError) as exc:
+        print(f"[cards] upstream summary unavailable: {exc}", file=sys.stderr)
+        merged_prs = None
+
     return {
-        "public_repos": user.get("public_repos", 0),
+        "merged_prs": merged_prs,
         "languages_used": all_lang_count,
         "contributions_year": contributions,
         "years_here": years_here,
@@ -321,8 +358,9 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
 
     yrs = stats["years_here"]
     contrib = stats["contributions_year"]
+    merged = stats["merged_prs"]
     metrics = [
-        ("public repos", str(stats["public_repos"])),
+        ("merged upstream PRs", str(merged) if merged is not None else "—"),
         ("contributions / year", str(contrib) if contrib is not None else "—"),
         ("languages used", str(stats["languages_used"])),
         ("years on github", f"{yrs:.1f}" if yrs is not None else "—"),
@@ -398,7 +436,7 @@ def write_stats(palette: dict[str, str]) -> str:
     stats = aggregate_stats(user, repos)
     path = ASSETS / "stats.svg"
     path.write_text(build_stats_card(stats, palette))
-    print(f"[cards] wrote {path}  ({stats['public_repos']} repos, {stats['languages_used']} langs, contrib={stats['contributions_year']})")
+    print(f"[cards] wrote {path}  ({stats['merged_prs']} merged PRs, {stats['languages_used']} langs, contrib={stats['contributions_year']})")
     return str(path.relative_to(ROOT))
 
 
