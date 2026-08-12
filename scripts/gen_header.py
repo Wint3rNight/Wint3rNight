@@ -5,9 +5,11 @@ by dots in the primary colour. An earlier version cycled the taglines
 with a typewriter reveal, showing one at a time; they now sit side by
 side so the whole line reads at a glance.
 
-The only motion left is the block cursor blinking at the end of the
-line, which keeps the terminal feel without hiding anything. No
-third-party widgets, no JS — pure SMIL so it renders on GitHub.
+The output is deliberately free of <animate> elements. GitHub overlays a
+play/pause control on any image containing animation and honours reduced-
+motion by rendering it paused — which froze the old cycling header on its
+first tagline and hid the rest. A fully static image has no control to
+overlay and looks identical for every visitor.
 
 Run after palette.json exists; output lives at assets/header.svg.
 """
@@ -89,9 +91,7 @@ def build() -> str:
     <text x="{TEXT_X}" y="{BASELINE_Y}">{''.join(spans)}</text>
   </g>
 
-  <rect x="{cursor_x:.1f}" y="{CURSOR_Y}" width="{CURSOR_W}" height="{CURSOR_H}" fill="{primary}" rx="1.5">
-    <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.45;0.5;0.95;1" dur="1.1s" repeatCount="indefinite"/>
-  </rect>
+  <rect x="{cursor_x:.1f}" y="{CURSOR_Y}" width="{CURSOR_W}" height="{CURSOR_H}" fill="{primary}" rx="1.5"/>
 </svg>
 '''
 

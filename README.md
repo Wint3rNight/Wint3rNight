@@ -5,7 +5,7 @@
 
 <!-- =========== TAGLINE :: hand-rolled animated svg =========== -->
 <p align="center">
-  <img src="./assets/header.svg" alt="taglines" width="100%" />
+  <img src="./assets/header.svg?v=2" alt="taglines" width="100%" />
 </p>
 
 ### whoami
