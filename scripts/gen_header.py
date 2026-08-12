@@ -22,10 +22,9 @@ PALETTE_PATH = ROOT / "palette.json"
 OUT_PATH = ROOT / "assets" / "header.svg"
 
 TAGLINES = [
-    "Renderer engineer",
-    "Graphics programmer",
-    "GPU programmer",
-    "Engine programmer",
+    "GPU performance",
+    "Real-time rendering",
+    "Systems programming",
 ]
 
 # Separator padding is applied with dx, not space characters: SVG collapses
@@ -43,6 +42,13 @@ CURSOR_H = 22
 CURSOR_Y = BASELINE_Y - CURSOR_H + 5
 HEIGHT = 62
 RIGHT_PAD = 30
+
+# The README renders this at width="100%", so the viewBox width sets the
+# apparent type size. Deriving it from the text meant a shorter tagline
+# list rendered visibly larger. Pinning a canvas width and centring the
+# content keeps type consistent no matter how the taglines are edited;
+# a list too long for the canvas still expands it rather than clipping.
+CANVAS_W = 1000
 
 
 def load_palette() -> dict[str, str]:
@@ -92,7 +98,12 @@ def build() -> str:
     seps = len(TAGLINES) - 1
     text_w = sum(len(t) for t in TAGLINES) * CHAR_PX + seps * (CHAR_PX + 2 * SEP_DX)
     cursor_x = TEXT_X + text_w + 14
-    width = int(cursor_x + CURSOR_W + RIGHT_PAD)
+
+    # Span from the prompt glyph to the far edge of the cursor, centred in
+    # the canvas so the line sits balanced at any tagline length.
+    content_w = (cursor_x + CURSOR_W) - PROMPT_X
+    width = max(CANVAS_W, int(cursor_x + CURSOR_W + RIGHT_PAD))
+    offset = (width - content_w) / 2 - PROMPT_X
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {HEIGHT}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="{line}">
   <defs>
@@ -106,12 +117,13 @@ def build() -> str:
   <rect x="0.5" y="0.5" width="{width - 1}" height="{HEIGHT - 1}" rx="10" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>
   <rect x="{PROMPT_X - 12}" y="{HEIGHT - 9}" width="{width - 2 * (PROMPT_X - 12)}" height="1.2" fill="url(#under)"/>
 
-  <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="{FONT_SIZE}">
-    <text x="{PROMPT_X}" y="{BASELINE_Y}" fill="{primary}" font-weight="700">&gt;</text>
-    <text x="{TEXT_X}" y="{BASELINE_Y}">{''.join(spans)}</text>
+  <g transform="translate({offset:.1f} 0)">
+    <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="{FONT_SIZE}">
+      <text x="{PROMPT_X}" y="{BASELINE_Y}" fill="{primary}" font-weight="700">&gt;</text>
+      <text x="{TEXT_X}" y="{BASELINE_Y}">{''.join(spans)}</text>
+    </g>
+    <rect x="{cursor_x:.1f}" y="{CURSOR_Y}" width="{CURSOR_W}" height="{CURSOR_H}" fill="{primary}" rx="1.5"/>
   </g>
-
-  <rect x="{cursor_x:.1f}" y="{CURSOR_Y}" width="{CURSOR_W}" height="{CURSOR_H}" fill="{primary}" rx="1.5"/>
 </svg>
 '''
 
