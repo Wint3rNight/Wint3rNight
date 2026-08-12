@@ -15,9 +15,9 @@ Undergraduate low-level C++ programmer working on GPU and systems performance â€
 ### featured
 
 <p align="center">
-  <a href="https://github.com/Wint3rNight/Tinyforge"><img src="./assets/featured-tinyforge.svg" alt="Tinyforge" width="340" /></a>
-  <a href="https://github.com/Wint3rNight/Heliora"><img src="./assets/featured-heliora.svg" alt="Heliora" width="340" /></a>
-  <a href="https://github.com/Wint3rNight/Zenith"><img src="./assets/featured-zenith.svg" alt="Zenith" width="340" /></a>
+  <a href="https://github.com/Wint3rNight/Tinyforge"><img src="./assets/featured-tinyforge.svg" alt="Tinyforge" width="32%" /></a>
+  <a href="https://github.com/Wint3rNight/Heliora"><img src="./assets/featured-heliora.svg" alt="Heliora" width="32%" /></a>
+  <a href="https://github.com/Wint3rNight/Zenith"><img src="./assets/featured-zenith.svg" alt="Zenith" width="32%" /></a>
 </p>
 
 <!-- =========== OPEN SOURCE :: generated from the GitHub search API =========== -->
