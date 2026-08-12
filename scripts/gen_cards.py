@@ -36,6 +36,17 @@ REPO_METRICS = {
     "Zenith": "3.2 ns/op scratch  ·  5.3x malloc",
 }
 
+# The card fits ~84 characters of description; a repo's own description is
+# written for its GitHub page, where there's room for the full pitch. These
+# are the card-sized versions — the numbers live in REPO_METRICS anyway, so
+# the blurb carries the qualitative half. Repos absent here fall back to
+# their API description, wrapped.
+REPO_BLURBS = {
+    "Tinyforge": "CUDA GEMM optimization lab — five stages from naive to cuBLAS parity",
+    "Heliora": "GPU-driven Vulkan renderer — compute culling, bindless, async SSAO",
+    "Zenith": "C++17 allocator toolkit — linear, pool, stack, free-list, benchmarked",
+}
+
 # GitHub's language colors. Falls back to a palette-derived colour for unknowns.
 LANG_COLORS = {
     "C": "#555555",
@@ -195,6 +206,48 @@ def truncate(s: str | None, n: int) -> str:
     return s if len(s) <= n else s[: n - 1].rstrip() + "…"
 
 
+# A 340px card with 16px padding leaves 308px; at font-size 12 the mono
+# advance is ~7.2px, so a line holds about 42 characters before it runs
+# off the card edge.
+DESC_COLS = 42
+DESC_LINES = 2
+
+
+def wrap_text(s: str | None, cols: int, max_lines: int) -> list[str]:
+    """Greedy word wrap, ellipsising whatever doesn't fit in max_lines."""
+    if not s:
+        return []
+    words = s.split()
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = f"{current} {word}".strip()
+        if len(candidate) <= cols:
+            current = candidate
+            continue
+        if current:
+            lines.append(current)
+        if len(lines) == max_lines:
+            break
+        # A single word longer than the column budget gets hard-split.
+        while len(word) > cols:
+            lines.append(word[:cols])
+            word = word[cols:]
+            if len(lines) == max_lines:
+                break
+        current = "" if len(lines) == max_lines else word
+    if current and len(lines) < max_lines:
+        lines.append(current)
+
+    if len(lines) == max_lines:
+        consumed = len(" ".join(lines))
+        if consumed < len(" ".join(words)):
+            lines[-1] = truncate(lines[-1], cols)
+            if not lines[-1].endswith("…"):
+                lines[-1] = lines[-1][: cols - 1].rstrip() + "…"
+    return lines
+
+
 # --- featured card ----------------------------------------------------------
 
 def build_repo_card(repo: dict, palette: dict[str, str]) -> str:
@@ -209,7 +262,8 @@ def build_repo_card(repo: dict, palette: dict[str, str]) -> str:
     muted = mix(d_rgb, l_rgb, 0.5)
 
     name = repo.get("name", "?")
-    desc = truncate(repo.get("description"), 88) or "no description yet"
+    blurb = REPO_BLURBS.get(name) or repo.get("description")
+    desc_lines = wrap_text(blurb, DESC_COLS, DESC_LINES) or ["no description yet"]
     lang = repo.get("language") or "—"
     stars = repo.get("stargazers_count", 0)
     forks = repo.get("forks_count", 0)
@@ -243,11 +297,15 @@ def build_repo_card(repo: dict, palette: dict[str, str]) -> str:
             f'{esc(error_state)}</text>'
         )
     else:
+        desc_block = "".join(
+            f'<text x="16" y="{60 + i * 17}" font-size="12" fill="{muted}" font-family="{mono}">{esc(line)}</text>'
+            for i, line in enumerate(desc_lines)
+        )
         body = (
-            f'<text x="16" y="64" font-size="12" fill="{muted}" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">{esc(desc)}</text>'
+            f'{desc_block}'
             f'<g transform="translate(16 {h - 22})">'
             f'<circle cx="6" cy="6" r="5.5" fill="{lang_color}"/>'
-            f'<text x="20" y="10" font-size="12" fill="{light}" opacity="0.85" font-family="JetBrains Mono, Fira Code, ui-monospace, monospace">{esc(lang)}</text>'
+            f'<text x="20" y="10" font-size="12" fill="{light}" opacity="0.85" font-family="{mono}">{esc(lang)}</text>'
             f'</g>'
             f'<g transform="translate({w - 16} {h - 22})">'
             f'{metric_footer}'

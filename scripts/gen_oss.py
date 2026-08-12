@@ -183,7 +183,10 @@ MONO = "JetBrains Mono, Fira Code, ui-monospace, monospace"
 
 def build_card(repos: list[dict], summary: dict, palette: dict[str, str]) -> str:
     rows = repos[:MAX_ROWS]
-    height = ROWS_TOP + max(len(rows), 1) * ROW_H + 12
+    overflow = len(repos) - len(rows)
+    # An overflow note gets its own half-height row so dropped projects are
+    # visible rather than silently missing.
+    height = ROWS_TOP + max(len(rows), 1) * ROW_H + (20 if overflow else 0) + 12
 
     primary = palette["primary"]
     light = palette["light"]
@@ -264,6 +267,13 @@ def build_card(repos: list[dict], summary: dict, palette: dict[str, str]) -> str
             f'<text x="{PAD_X + 24}" y="{top + 34}" font-size="11.5" fill="{muted}">'
             f'<tspan fill="{primary}" opacity="0.8">{refs}</tspan><tspan dx="10">{esc(note)}</tspan></text>'
             f'</g>'
+        )
+
+    if overflow:
+        plural = "s" if overflow != 1 else ""
+        parts.append(
+            f'<text x="{PAD_X + 24}" y="{ROWS_TOP + len(rows) * ROW_H + 12}" font-size="11.5" '
+            f'fill="{muted}" font-family="{MONO}">+ {overflow} more project{plural}</text>'
         )
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {height}" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="upstream open source contributions by {USERNAME}">
