@@ -48,11 +48,13 @@ jobs:
       # the script authoritative: header.svg and pipeline.svg have both been
       # hand-edited into a state their generator couldn't reproduce, which
       # meant the next run would silently revert the better version.
-      - name: Regenerate header
-        run: python3 scripts/gen_header.py
+      - name: Regenerate header + contact cards
+        run: |
+          python3 scripts/gen_header.py
+          python3 scripts/gen_contact.py
 
       - uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "build: refresh cards + activity"
           branch: main
-          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg assets/oss.svg assets/pipeline.svg assets/header.svg
+          file_pattern: assets/featured-*.svg assets/stats.svg assets/activity.svg assets/oss.svg assets/pipeline.svg assets/header.svg assets/contact-*.svg

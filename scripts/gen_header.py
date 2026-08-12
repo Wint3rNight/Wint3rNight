@@ -37,7 +37,7 @@ FONT_SIZE = 20
 CHAR_PX = FONT_SIZE * 0.6  # mono advance is 0.6em in JetBrains Mono / Fira Code
 PROMPT_X = 30
 TEXT_X = 60
-BASELINE_Y = 42
+BASELINE_Y = 38
 CURSOR_W = 10
 CURSOR_H = 22
 CURSOR_Y = BASELINE_Y - CURSOR_H + 5
@@ -51,10 +51,29 @@ def load_palette() -> dict[str, str]:
     return {"primary": "#8658E3", "dark": "#1A1A1A", "light": "#DADADA"}
 
 
+def hex_to_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def mix(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> str:
+    return "#{:02X}{:02X}{:02X}".format(
+        int(a[0] + (b[0] - a[0]) * t),
+        int(a[1] + (b[1] - a[1]) * t),
+        int(a[2] + (b[2] - a[2]) * t),
+    )
+
+
 def build() -> str:
     palette = load_palette()
     primary = palette["primary"]
     light = palette["light"]
+    # The taglines are drawn in the palette's light colour. Without a card
+    # behind them they sat directly on the page background, which made them
+    # near-invisible on GitHub's light theme. Every other asset on the
+    # profile carries its own card; this one now does too.
+    card_fill = mix(hex_to_rgb(palette["dark"]), hex_to_rgb(primary), 0.07)
+    card_stroke = mix(hex_to_rgb(palette["dark"]), hex_to_rgb(primary), 0.42)
 
     line = " · ".join(TAGLINES)
 
@@ -84,7 +103,8 @@ def build() -> str:
     </linearGradient>
   </defs>
 
-  <rect x="{PROMPT_X - 12}" y="{HEIGHT - 6}" width="{width - 2 * (PROMPT_X - 12)}" height="1.2" fill="url(#under)"/>
+  <rect x="0.5" y="0.5" width="{width - 1}" height="{HEIGHT - 1}" rx="10" fill="{card_fill}" stroke="{card_stroke}" stroke-width="1"/>
+  <rect x="{PROMPT_X - 12}" y="{HEIGHT - 9}" width="{width - 2 * (PROMPT_X - 12)}" height="1.2" fill="url(#under)"/>
 
   <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="{FONT_SIZE}">
     <text x="{PROMPT_X}" y="{BASELINE_Y}" fill="{primary}" font-weight="700">&gt;</text>

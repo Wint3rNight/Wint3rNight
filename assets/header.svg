@@ -7,12 +7,13 @@
     </linearGradient>
   </defs>
 
-  <rect x="18" y="56" width="960" height="1.2" fill="url(#under)"/>
+  <rect x="0.5" y="0.5" width="995" height="61" rx="10" fill="#211E28" stroke="#47346E" stroke-width="1"/>
+  <rect x="18" y="53" width="960" height="1.2" fill="url(#under)"/>
 
   <g font-family="JetBrains Mono, Fira Code, ui-monospace, monospace" font-size="20">
-    <text x="30" y="42" fill="#8658E3" font-weight="700">&gt;</text>
-    <text x="60" y="42"><tspan fill="#DADADA">Renderer engineer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">Graphics programmer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">GPU programmer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">Engine programmer</tspan></text>
+    <text x="30" y="38" fill="#8658E3" font-weight="700">&gt;</text>
+    <text x="60" y="38"><tspan fill="#DADADA">Renderer engineer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">Graphics programmer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">GPU programmer</tspan><tspan fill="#8658E3" dx="7">·</tspan><tspan fill="#DADADA" dx="7">Engine programmer</tspan></text>
   </g>
 
-  <rect x="956.0" y="25" width="10" height="22" fill="#8658E3" rx="1.5"/>
+  <rect x="956.0" y="21" width="10" height="22" fill="#8658E3" rx="1.5"/>
 </svg>
