@@ -266,22 +266,17 @@ def write_featured(palette: dict[str, str]) -> list[str]:
 
 # --- stats card -------------------------------------------------------------
 
-def aggregate_stats(repos: list[dict]) -> dict:
-    """Aggregate language stats by summing raw bytes across all owned repos.
+def aggregate_stats() -> dict:
+    """Language breakdown of authored work, from the langs module.
 
-    GitHub exposes bytes-per-language via /repos/{owner}/{repo}/languages.
-    Summing those gives a far more accurate picture than counting how many
-    repos list a language as their primary language.
+    The /languages endpoint this used to sum reports the size of everything
+    on a repo's default branch, so vendored single-header libraries counted
+    as authored code and forks — where all the upstream work lives —
+    counted as nothing. langs.py measures what was actually written.
     """
-    owned = [r for r in repos if not r.get("fork")]
+    from langs import language_totals
 
-    lang_bytes: dict[str, int] = {}
-    for r in owned:
-        langs = safe_gh(f"/repos/{USERNAME}/{r['name']}/languages", {})
-        if not isinstance(langs, dict):
-            continue
-        for lang, byte_count in langs.items():
-            lang_bytes[lang] = lang_bytes.get(lang, 0) + byte_count
+    lang_bytes = language_totals()
 
     # Top N by bytes, percentages relative to the top-N subtotal
     sorted_langs = sorted(lang_bytes.items(), key=lambda kv: kv[1], reverse=True)
@@ -368,11 +363,15 @@ def build_stats_card(stats: dict, palette: dict[str, str]) -> str:
 
 
 def write_stats(palette: dict[str, str]) -> str:
-    repos = safe_gh(f"/users/{USERNAME}/repos?per_page=100&type=owner&sort=updated", []) or []
-    if not isinstance(repos, list):
-        repos = []
-    stats = aggregate_stats(repos)
+    stats = aggregate_stats()
     path = ASSETS / "stats.svg"
+
+    # The workflow auto-commits whatever is on disk, so an API failure must
+    # not replace a good chart with an empty bar.
+    if not stats["top_langs"] and path.exists():
+        print("[cards] language data unavailable — keeping the existing chart", file=sys.stderr)
+        return str(path.relative_to(ROOT))
+
     path.write_text(build_stats_card(stats, palette))
     print(f"[cards] wrote {path}  ({len(stats['top_langs'])} languages)")
     return str(path.relative_to(ROOT))
