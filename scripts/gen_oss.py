@@ -76,13 +76,25 @@ def fetch_upstream_prs(username: str) -> list[dict] | None:
     `pull_request.merged_at` comes back inside the search payload, so
     merged-vs-open needs no follow-up request per PR.
     """
-    query = parse.urlencode({"q": f"author:{username} type:pr", "per_page": 100, "advanced_search": "true"})
-    payload = gh_get(f"https://api.github.com/search/issues?{query}", None)
-    if not payload or "items" not in payload:
-        return None
+    query = parse.urlencode({"q": f"author:{username} type:pr", "advanced_search": "true"})
+    items: list[dict] = []
+    for page in range(1, 11):  # search caps out at 1000 results
+        payload = gh_get(f"https://api.github.com/search/issues?{query}&per_page=100&page={page}", None)
+        if not payload or "items" not in payload:
+            if page == 1:
+                return None  # nothing came back at all — caller keeps the old card
+            break  # a later page failed; the pages already collected still stand
+        batch = payload["items"]
+        items.extend(batch)
+        if len(batch) < 100:
+            break
 
+    return _to_prs(items, username)
+
+
+def _to_prs(items: list[dict], username: str) -> list[dict]:
     prs: list[dict] = []
-    for item in payload["items"]:
+    for item in items:
         full_name = item.get("repository_url", "").split("/repos/")[-1]
         owner = full_name.split("/")[0]
         if owner.lower() == username.lower():

@@ -171,30 +171,46 @@ def owned_repo_bytes() -> dict[str, int]:
     return totals
 
 
+def _paged(path: str, key: str | None = None, cap: int = 10) -> list:
+    """Follow pages until one comes back short.
+
+    Both endpoints below default to a single page of 100. Without this a
+    hundredth pull request, or a PR touching more than a hundred files,
+    would drop out of the totals with nothing to indicate it.
+    """
+    out: list = []
+    for page in range(1, cap + 1):
+        sep = "&" if "?" in path else "?"
+        payload = gh(f"{path}{sep}per_page=100&page={page}", None)
+        if payload is None:
+            break
+        batch = payload.get(key, []) if key else payload
+        if not isinstance(batch, list) or not batch:
+            break
+        out.extend(batch)
+        if len(batch) < 100:
+            break
+    return out
+
+
 def upstream_pr_bytes() -> dict[str, int]:
     """Additions from pull requests authored against other people's repos.
 
     Additions are line counts, not bytes, so they're scaled to a rough
-    byte-equivalent before being merged with the tree totals. The point is
-    that upstream work registers at all — it was previously invisible.
+    byte-equivalent before being merged with the tree totals. Deletions are
+    deliberately not counted: a change that removes more than it adds is
+    real work, but calling it "code written" would be its own distortion.
     """
-    query = parse.urlencode(
-        {"q": f"author:{USERNAME} type:pr", "per_page": 100, "advanced_search": "true"}
-    )
-    payload = gh(f"/search/issues?{query}", None)
-    if not payload or "items" not in payload:
-        return {}
+    query = parse.urlencode({"q": f"author:{USERNAME} type:pr", "advanced_search": "true"})
+    items = _paged(f"/search/issues?{query}", key="items")
 
     AVG_LINE_BYTES = 34
     totals: dict[str, int] = {}
-    for item in payload["items"]:
+    for item in items:
         full = item.get("repository_url", "").split("/repos/")[-1]
         if full.split("/")[0].lower() == USERNAME.lower():
             continue  # own repo, already counted via its tree
-        files = gh(f"/repos/{full}/pulls/{item['number']}/files?per_page=100", [])
-        if not isinstance(files, list):
-            continue
-        for f in files:
+        for f in _paged(f"/repos/{full}/pulls/{item['number']}/files"):
             lang = classify(f.get("filename", ""), cxx_repo=True)
             if lang:
                 totals[lang] = totals.get(lang, 0) + f.get("additions", 0) * AVG_LINE_BYTES
