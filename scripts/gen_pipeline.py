@@ -43,7 +43,7 @@ RASTER = [
 COMPUTE = [
     ("kernels", "CUDA · cuBLAS", "GEMM · SIMT"),
     ("optimization", "tiling · float4", "occupancy analysis"),
-    ("profiling", "Nsight Compute", "4400 GFLOPS"),
+    ("profiling", "Nsight Compute", "4289 GFLOPS"),
 ]
 
 TOOLS = [

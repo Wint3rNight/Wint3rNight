@@ -38,7 +38,10 @@ TOKEN = os.environ.get("GITHUB_TOKEN")
 PROJECT_NOTES = {
     "KhronosGroup/glslang": "constant folding for hyperbolic + bit-cast builtins, bit-identical to the SPIR-V back end",
     "KhronosGroup/Vulkan-ValidationLayers": "draw-time validation checks — +104 VUIDs covered across 678 tests, 0 regressions",
-    "google/highway": "IndexOfMin / IndexOfMax for hwy/contrib/algo, plus a 2x unroll",
+    "google/highway": "SIMD algorithms for hwy/contrib/algo: IndexOf, AllOf/AnyOf/NoneOf, EqualSpan and more",
+    "flashinfer-ai/flashinfer": "P1 crash fix for misaligned vectorised loads in the activation kernels",
+    "NVIDIA/cccl": "CUB scan benchmarks for extended floating-point types",
+    "KhronosGroup/Vulkan-Loader": "device-group settings filtering fix inside libvulkan",
     "ggml-org/llama.cpp": "CUDA backend — f16 support for OUT_PROD",
     "NVIDIA/raft": "RAFT_LOG_TRACE_VEC fix after the rapids-logger migration",
     "shadps4-emu/shadPS4": "shader recompiler — 10_11_11 unorm/snorm/uint/sint number formats",

@@ -10,7 +10,7 @@
 
 ### whoami
 
-Undergraduate low-level C++ programmer working on GPU and systems performance — CUDA kernel optimization, real-time Vulkan rendering, and merged contributions to the Khronos graphics toolchain.
+Undergraduate low-level C++ programmer working on GPU and systems performance: CUDA kernel optimization, real-time Vulkan rendering, and merged contributions to Khronos, Google Highway, NVIDIA CCCL and FlashInfer.
 
 ### featured
 
